@@ -1,0 +1,35 @@
+server:
+  port: 8888
+app:
+  gateway:
+    jwts:
+      OEM:
+        secret: iwqjhda8232bjgh432[cicada-smile]
+        expires: 12h
+      ADMIN:
+        secret: iwqjhda8232bjgh432[cicada-smile]
+        expires: 12h
+      STUDENT:
+        secret: iwqjhda8232bjgh432[cicada-smile]
+        expires: 12h
+      SELF_STUDY_STUDENT:
+        secret: rv2aO/T32zyAuSN+4QX6JorS7NOuL1SjWZvL4OwrvkpTjqgXr64VqxsWjlIRd/358zBI0rjIXg3Hj/vtHtn0TQ==
+        expires: 12h
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: cjf_rb-common
+          uri: http://127.0.0.1:9090
+          predicates:
+            - Path=/cjf_rb/common/**
+          filters:
+            - RewritePath=/cjf_rb/common/?(?<segment>.*), /$\{segment}
+            - AccessToken
+        - id: cjf_rb-openapi
+          uri: http://127.0.0.1:9098
+          predicates:
+            - Path=/cjf_rb/openapi/**
+          filters:
+            - RewritePath=/cjf_rb/openapi/?(?<segment>.*), /$\{segment}

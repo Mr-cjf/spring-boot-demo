@@ -1,0 +1,87 @@
+spring:
+  application:
+    name: cjf_rb-gateway
+  profiles:
+    active: ${PROFILES_ACTIVE:local}
+
+  cloud:
+    gateway:
+      httpclient:
+        # 全局超时配置
+        connect-timeout: 3000
+        response-timeout: 60s
+      globalcors:
+        # 解决options请求被拦截问题
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowCredentials: true
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      default-filters:
+        - DedupeResponseHeader=X-Trace-Id Vary Access-Control-Allow-Origin Access-Control-Request-Headers Access-Control-Request-Method Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      routes:
+        - id: cjf_rb-common
+          uri: http://cjf_rb-common.gold-cjf_rb-${spring.profiles.active}-svc
+          predicates:
+            - Path=/cjf_rb/common/**
+          filters:
+            - RewritePath=/cjf_rb/common/?(?<segment>.*), /$\{segment}
+            - AccessToken
+        - id: cjf_rb-open-api
+          uri: http://cjf_rb-open-api.gold-cjf_rb-${spring.profiles.active}-svc
+          predicates:
+            - Path=/cjf_rb/openapi/**
+          filters:
+            - RewritePath=/cjf_rb/openapi/?(?<segment>.*), /$\{segment}
+
+  jackson:
+    default-property-inclusion: non_null
+    property-naming-strategy: LOWER_CAMEL_CASE
+    serialization:
+      fail-on-empty-beans: false
+      write-date-keys-as-timestamps: true
+      write-date-timestamps-as-nanoseconds: false
+      write-dates-as-timestamps: true
+    deserialization:
+      fail-on-unknown-properties: false
+      fail-on-numbers-for-enums: true
+      read-date-timestamps-as-nanoseconds: false
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  #开启暴露web
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus
+          - health
+
+app:
+  gateway:
+    whitelist:
+      uris:
+        - /*/open/**
+        - /open/**
+        - /*/captcha/**
+    jwts:
+      PLATFORM:
+        secret: ${OEM_JWT_SECRET}
+        expires: 12h
+      OEM:
+        secret: ${ADMIN_JWT_SECRET}
+        expires: 12h
+      USER:
+        secret: ${STUDENT_JWT_SECRET}
+        expires: 12h
+      SELF_STUDY_STUDENT:
+        secret: ${SELF_STUDY_STUDENT_JWT_SECRET}
+        expires: 12h
