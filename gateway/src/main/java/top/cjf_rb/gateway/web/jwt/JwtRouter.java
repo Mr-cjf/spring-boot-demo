@@ -13,8 +13,6 @@ import java.util.Optional;
  *     </h2>
  * </pre>
  *
- * @Author Zoe
- * @create 2024/3/18
  */
 @RequiredArgsConstructor
 public class JwtRouter {

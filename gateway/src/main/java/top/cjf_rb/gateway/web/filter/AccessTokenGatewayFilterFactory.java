@@ -24,9 +24,7 @@ import java.util.List;
  *     <li>配置名称为 - AccessToken （必须切掉前缀） </li>
  *     <li>与配置的GateFilter工厂可共用</li>
  * </pre>
- * 
- * @Author Zoe
- * @create 2024/3/19
+ *
  */
 @Slf4j
 @Component

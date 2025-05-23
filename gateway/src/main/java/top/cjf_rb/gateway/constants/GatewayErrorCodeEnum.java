@@ -4,10 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import top.cjf_rb.gateway.exception.ErrorCode;
 
-/**
- * @Author Zoe
- * @create 2024/3/19
- */
 @Getter
 @AllArgsConstructor
 public enum GatewayErrorCodeEnum implements ErrorCode {
