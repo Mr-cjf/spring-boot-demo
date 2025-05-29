@@ -42,8 +42,6 @@ dubbo:
   protocol:
     name: dubbo  # 使用 Dubbo 协议
     port: 20880  # Dubbo 服务监听端口
-  scan:
-    base-packages: top.cjf_rb.api_provider.api.service
 
   #  # 使用 Dubbo 3.x 推荐的元数据服务配置方式
   metadata-report:
@@ -52,4 +50,9 @@ dubbo:
     port: 8848
     username: admin
     password: admin
+
+logging:
+  level:
+    org.apache.dubbo.registry.configured: debug
+    org.apache.dubbo.common.config.Environment: debug
 
