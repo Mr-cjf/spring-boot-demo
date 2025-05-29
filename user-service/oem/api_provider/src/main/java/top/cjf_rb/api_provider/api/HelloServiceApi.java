@@ -3,12 +3,12 @@ package top.cjf_rb.api_provider.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import top.cjf_rb.aut_interface.annotation.AutoDubboService;
 
-@AutoDubboService()
-@DubboService(group = "api", version = "1.0.0")
+@AutoDubboService(interfaceName = "HelloService")
+@Service
 @RequiredArgsConstructor
 public class HelloServiceApi {
 

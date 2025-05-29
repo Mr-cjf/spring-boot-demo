@@ -3,9 +3,11 @@ package top.cjf_rb.oem.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.cjf_rb.api_provider.api.service.HelloServiceApi;
+import top.cjf_rb.api_provider.api.service.HelloService;
 
 
 /**
@@ -17,13 +19,13 @@ import top.cjf_rb.api_provider.api.service.HelloServiceApi;
 @RequestMapping("/open")
 @RequiredArgsConstructor
 public class OpenController {
-
-    private final HelloServiceApi helloService;
+    @DubboReference
+    private HelloService helloService;
 
 
     // test
     @RequestMapping("/hello")
-    public String hello(String name) {
+    public String hello(@RequestParam("name") String name) {
         return helloService.sayHello(name);
     }
 }

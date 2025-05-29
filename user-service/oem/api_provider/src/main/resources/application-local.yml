@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDR:192.168.33.33}
+
+dubbo:
+  registry:
+    address: nacos://${NACOS_ADDR:192.168.33.33}
+  # 使用 Dubbo 3.x 推荐的元数据服务配置方式
+  metadata-report:
+    # 元数据服务地址（Nacos）
+    address: nacos://${NACOS_ADDR:192.168.33.33}
