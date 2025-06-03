@@ -8,9 +8,12 @@ import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -91,93 +94,182 @@ public class DubboAnnotationProcessor extends AbstractProcessor {
         ClassName interfaceType = ClassName.get(interfacePackage, interfaceName);
         ClassName delegateType = ClassName.get(packageName, classElement.getSimpleName().toString());
 
-        // 构建字段和构造方法
-        FieldSpec delegateField = FieldSpec.builder(delegateType, "delegate")
-                .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-                .build();
+        // 分解字段和构造方法生成
+        FieldSpec delegateField = buildDelegateField(delegateType);
+        MethodSpec constructor = buildConstructor(delegateType);
 
-        MethodSpec constructor = MethodSpec.constructorBuilder()
-                .addModifiers(Modifier.PUBLIC)
-                .addParameter(delegateType, "delegate")
-                .addStatement("this.delegate = java.util.Objects.requireNonNull(delegate)")
-                .build();
+        // 分解方法生成逻辑
+        List<MethodSpec> methods = buildDelegateMethods(classElement);
 
-        // 构建方法
-        List<MethodSpec> methods = new ArrayList<>();
-        for (Element e : classElement.getEnclosedElements()) {
-            if (e.getKind() == ElementKind.METHOD && e.getModifiers().contains(Modifier.PUBLIC)) {
-                ExecutableElement method = (ExecutableElement) e;
-                MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(method.getSimpleName().toString())
-                        .addAnnotation(Override.class)
-                        .addModifiers(Modifier.PUBLIC)
-                        .returns(TypeName.get(method.getReturnType()))
-                        .addParameters(method.getParameters().stream()
-                                .map(p -> ParameterSpec.builder(TypeName.get(p.asType()), p.getSimpleName().toString())
-                                        .build())
-                                .collect(Collectors.toList()));
-
-                if (method.getReturnType().getKind() != TypeKind.VOID) {
-                    methodBuilder.addStatement("return delegate.$N($L)", method.getSimpleName(),
-                            getParameterNames(method));
-                } else {
-                    methodBuilder.addStatement("delegate.$N($L)", method.getSimpleName(), getParameterNames(method));
-                }
-                methods.add(methodBuilder.build());
-            }
-        }
-
-        // 构建 DubboService 注解
-        AnnotationSpec.Builder dubboServiceBuilder = AnnotationSpec.builder(
-                ClassName.get("org.apache.dubbo.config.annotation", "DubboService"));
-
-        // 提取源类上的 DubboService 注解
-        AnnotationMirror dubboServiceAnno = classElement.getAnnotationMirrors().stream()
-                .filter(am -> "org.apache.dubbo.config.annotation.DubboService"
-                        .equals(am.getAnnotationType().toString()))
-                .findFirst()
-                .orElse(null);
-
-        if (dubboServiceAnno != null) {
-            for (var entry : dubboServiceAnno.getElementValues().entrySet()) {
-                ExecutableElement keyElement = entry.getKey();
-                String key = keyElement.getSimpleName().toString();
-                Object value = entry.getValue().getValue();
-
-                // 处理不同类型的值
-                if (value instanceof String) {
-                    dubboServiceBuilder.addMember(key, "$S", value);
-                } else if (value instanceof Integer) {
-                    dubboServiceBuilder.addMember(key, "$L", value);
-                } else if (value instanceof Boolean) {
-                    dubboServiceBuilder.addMember(key, "$L", value);
-                } else if (value instanceof Enum) {
-                    dubboServiceBuilder.addMember(key, "$T.$L", ((Enum<?>) value).getDeclaringClass(), value);
-                } else if (value instanceof List<?> listValue) {
-                    if (!listValue.isEmpty()) {
-                        StringBuilder sb = new StringBuilder("{");
-                        for (Object item : listValue) {
-                            if (item instanceof String) {
-                                sb.append("$S").append(", ");
-                            } else if (item instanceof Integer) {
-                                sb.append("$L").append(", ");
-                            }
-                        }
-                        sb.setLength(sb.length() - 2); // 去掉最后一个逗号和空格
-                        sb.append("}");
-                        dubboServiceBuilder.addMember(key, sb.toString(), listValue.toArray());
-                    }
-                }
-            }
-        }
+        // 分解注解处理逻辑
+        ClassName serviceAnnotationType = resolveServiceAnnotation(classElement);
+        AnnotationSpec serviceAnnotation = buildServiceAnnotation(classElement, serviceAnnotationType);
 
         return TypeSpec.classBuilder(implName)
                 .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(dubboServiceBuilder.build()) // 使用构建的注解
+                .addAnnotation(serviceAnnotation)
                 .addSuperinterface(interfaceType)
                 .addField(delegateField)
                 .addMethod(constructor)
                 .addMethods(methods)
                 .build();
+    }
+
+    // 新增方法：构建委托字段
+    private FieldSpec buildDelegateField(ClassName delegateType) {
+        return FieldSpec.builder(delegateType, "delegate")
+                .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                .build();
+    }
+
+    // 新增方法：构建构造方法
+    private MethodSpec buildConstructor(ClassName delegateType) {
+        return MethodSpec.constructorBuilder()
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(delegateType, "delegate")
+                .addStatement("this.delegate = java.util.Objects.requireNonNull(delegate)")
+                .build();
+    }
+
+    // 新增方法：构建委托方法
+    private List<MethodSpec> buildDelegateMethods(TypeElement classElement) {
+        return classElement.getEnclosedElements().stream()
+                .filter(e -> e.getKind() == ElementKind.METHOD && e.getModifiers().contains(Modifier.PUBLIC))
+                .map(e -> (ExecutableElement) e)
+                .map(this::buildDelegateMethod)
+                .collect(Collectors.toList());
+    }
+
+    // 新增方法：构建单个委托方法
+    private MethodSpec buildDelegateMethod(ExecutableElement method) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(method.getSimpleName().toString())
+                .addAnnotation(Override.class)
+                .addModifiers(Modifier.PUBLIC)
+                .returns(TypeName.get(method.getReturnType()))
+                .addParameters(buildMethodParameters(method));
+
+        if (method.getReturnType().getKind() != TypeKind.VOID) {
+            builder.addStatement("return delegate.$N($L)", method.getSimpleName(), getParameterNames(method));
+        } else {
+            builder.addStatement("delegate.$N($L)", method.getSimpleName(), getParameterNames(method));
+        }
+        return builder.build();
+    }
+
+    // 新增方法：构建方法参数
+    private List<ParameterSpec> buildMethodParameters(ExecutableElement method) {
+        return method.getParameters().stream()
+                .map(p -> ParameterSpec.builder(TypeName.get(p.asType()), p.getSimpleName().toString()).build())
+                .collect(Collectors.toList());
+    }
+
+    // 新增方法：解析服务注解类型
+    private ClassName resolveServiceAnnotation(TypeElement classElement) {
+        return classElement.getAnnotationMirrors().stream()
+                .map(am -> am.getAnnotationType().toString())
+                .filter(type -> type.equals("org.apache.dubbo.config.annotation.DubboService") ||
+                        type.equals("org.springframework.stereotype.Service"))
+                .map(this::parseClassName)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("找不到有效的服务注解"));
+    }
+
+    // 新增方法：构建服务注解
+    private AnnotationSpec buildServiceAnnotation(TypeElement classElement, ClassName annotationType) {
+        AnnotationSpec.Builder builder = AnnotationSpec.builder(annotationType);
+        classElement.getAnnotationMirrors().stream()
+                .filter(am -> am.getAnnotationType().toString().equals(annotationType.toString()))
+                .findFirst()
+                .ifPresent(anno -> copyAnnotationValues(anno, builder));
+        return builder.build();
+    }
+
+    // 新增方法：拷贝注解值
+    private void copyAnnotationValues(AnnotationMirror annotation, AnnotationSpec.Builder builder) {
+        annotation.getElementValues().forEach((key, value) -> {
+            String memberName = key.getSimpleName().toString();
+            Object val = value.getValue();
+            if (val == null) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING,
+                        "注解字段值为 null: " + memberName);
+                return;
+            }
+
+            switch (val) {
+                case Collection<?> coll -> {
+                    if (coll.isEmpty()) {
+                        builder.addMember(memberName, "$T.emptyArray()", ClassName.get("com.util", "ArrayUtils"));
+                    } else {
+                        addArrayAnnotationMember(builder, memberName, List.of(coll.toArray()));
+                    }
+                }
+                case Enum<?> enumVal -> builder.addMember(memberName, "$T.$L", enumVal.getDeclaringClass(), enumVal);
+                case String s -> builder.addMember(memberName, "$S", s);
+                case Number num -> builder.addMember(memberName, "$L", num);
+                case Boolean b -> builder.addMember(memberName, "$L", b);
+                case TypeMirror tm -> builder.addMember(memberName, "$T.class", TypeName.get(tm));
+                case AnnotationMirror nestedAnno -> builder.addMember(memberName, "$L", AnnotationSpec.get(nestedAnno));
+                case Object obj when obj.getClass().isArray() -> handleArray(builder, memberName, obj);
+                default -> processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING,
+                        "不支持的注解值类型: " + val.getClass().getName());
+            }
+        });
+    }
+
+    // 处理数组
+    private void handleArray(AnnotationSpec.Builder builder, String memberName, Object array) {
+        // 创建一个CodeBlock.Builder对象
+        CodeBlock.Builder codeBlock = CodeBlock.builder().add("{");
+
+        // 获取数组的长度
+        int length = Array.getLength(array);
+        // 遍历数组
+        for (int i = 0; i < length; i++) {
+            // 获取数组中的元素
+            Object element = Array.get(array, i);
+            // 如果元素是AnnotationMirror类型
+            if (element instanceof AnnotationMirror anno) {
+                // 将AnnotationMirror转换为AnnotationSpec
+                codeBlock.add("$L", AnnotationSpec.get(anno));
+                // 如果元素是String类型
+            } else if (element instanceof String) {
+                // 将String元素添加到CodeBlock中
+                codeBlock.add("$S", element);
+                // 如果元素是其他类型
+            } else {
+                // 将元素添加到CodeBlock中
+                codeBlock.add("$L", element);
+            }
+            // 如果不是最后一个元素，添加一个逗号
+            if (i < length - 1) codeBlock.add(", ");
+        }
+        // 添加一个右括号
+        codeBlock.add("}");
+
+        // 将CodeBlock添加到AnnotationSpec中
+        builder.addMember(memberName, "$L", codeBlock.build());
+    }
+
+    // 新增通用集合处理方法
+    private void addArrayAnnotationMember(AnnotationSpec.Builder builder, String memberName, Collection<?> collection) {
+        CodeBlock elements = collection.stream()
+                .map(item -> {
+                    if (item instanceof String) return CodeBlock.of("$S", item);
+                    if (item instanceof AnnotationMirror)
+                        return CodeBlock.of("$L", AnnotationSpec.get((AnnotationMirror) item));
+                    return CodeBlock.of("$L", item);
+                })
+                .collect(CodeBlock.joining(", "));
+
+        builder.addMember(memberName, "{$L}", elements);
+    }
+
+    // 新增方法：解析类名
+    private ClassName parseClassName(String fullClassName) {
+        String[] parts = fullClassName.split("\\.");
+        String pkg = String.join(".", Arrays.asList(parts).subList(0, parts.length - 1));
+        String name = parts[parts.length - 1];
+        return ClassName.get(pkg, name);
     }
 
     private void writeFile(String packageName, TypeSpec typeSpec) {

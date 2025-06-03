@@ -20,12 +20,12 @@ import top.cjf_rb.api_provider.api.service.HelloService;
 @RequiredArgsConstructor
 public class OpenController {
     @DubboReference
-    private HelloService helloService;
+    private final HelloService helloService;
 
 
     // test
     @RequestMapping("/hello")
     public String hello(@RequestParam("name") String name) {
-        return helloService.sayHello(name);
+        return helloService.sayHello7(name);
     }
 }

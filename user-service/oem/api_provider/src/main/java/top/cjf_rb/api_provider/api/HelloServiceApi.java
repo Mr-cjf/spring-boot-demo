@@ -22,6 +22,7 @@ public class HelloServiceApi {
 
     public String sayHello(String name) {
         // 返回一个字符串，内容为"Hello "加上传入的name参数
+        System.out.println("Hello " + name);
         return "Hello " + name;
     }
 
@@ -58,5 +59,9 @@ public class HelloServiceApi {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String sayHello7(String name) {
+        return "Hello " + name;
     }
 }

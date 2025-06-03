@@ -11,6 +11,46 @@ spring:
   profiles:
     active: ${PROFILES_ACTIVE:local}
 
+  # 数据库配置
+  datasource:
+    dynamic:
+      primary: master   # 设置默认数据源
+      datasource:
+        master:
+          url: jdbc:mysql://localhost:3306/master_db?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+        slave1:
+          url: jdbc:mysql://localhost:3306/slave1_db?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+        slave2:
+          url: jdbc:mysql://localhost:3306/slave2_db?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      # 最大连接池数量（根据数据库负载调整）
+      maximum-pool-size: 10
+      # 最小空闲连接数（保持一定数量的空闲连接，减少频繁创建销毁开销）
+      minimum-idle: 5
+      # 空闲连接超时时间（毫秒），超过该时间未使用的连接将被回收
+      idle-timeout: 30000
+      # 连接最大存活时间（毫秒），防止连接老化（建议略小于数据库 wait_timeout）
+      max-lifetime: 1800000
+      # 获取连接的最大等待时间（毫秒），用于控制数据库压力过大时的阻塞行为
+      connection-timeout: 30000
+      # 自定义连接池名称，方便在监控或日志中识别
+      pool-name: MyHikariPool
+      # 是否自动提交事务，默认 true，可根据业务需求设置为 false
+      auto-commit: true
+      # 验证连接是否有效的超时时间（毫秒），确保获取到的是可用连接
+      validation-timeout: 5000
+      # 连接泄漏检测阈值（毫秒），如果连接未在指定时间内释放，会记录警告日志
+      leak-detection-threshold: 30000
+
   # Nacos 服务发现配置
   cloud:
     nacos:
