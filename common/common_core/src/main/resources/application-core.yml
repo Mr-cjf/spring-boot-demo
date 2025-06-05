@@ -1,0 +1,45 @@
+# tomcat default config
+server:
+  tomcat:
+    max-connections: 8192
+    accept-count: 100
+    threads:
+      max: 200
+      min-spare: 10
+# spring config
+spring:
+  servlet:
+    multipart:
+      max-file-size: 4MB
+      max-request-size: 20MB
+  web:
+    resources:
+      add-mappings: false
+  jackson:
+    default-property-inclusion: non_null
+    property-naming-strategy: LOWER_CAMEL_CASE
+    serialization:
+      fail-on-empty-beans: false
+      write-date-keys-as-timestamps: true
+      write-date-timestamps-as-nanoseconds: false
+      write-dates-as-timestamps: true
+    deserialization:
+      fail-on-unknown-properties: false
+      fail-on-numbers-for-enums: true
+      read-date-timestamps-as-nanoseconds: false
+  cache:
+    redis:
+      cache-null-values: true
+      key-prefix: "${spring.application.name}:"
+      time-to-live: 3d
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 4
+          min-idle: 1
+          max-wait: 2000ms

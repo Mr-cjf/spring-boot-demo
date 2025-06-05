@@ -12,6 +12,11 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>main_system</module>
+        <module>oem</module>
+    </modules>
+
     <build>
         <plugins>
             <plugin>

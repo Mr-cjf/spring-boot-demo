@@ -9,7 +9,6 @@
 	</parent>
 	<packaging>pom</packaging>
 	<modules>
-		<module>aut_interface</module>
 		<module>api_provider</module>
 		<module>consumer</module>
 		<module>domain</module>
