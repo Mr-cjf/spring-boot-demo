@@ -9,9 +9,10 @@ spring:
       datasource:
         master:
           url: jdbc:mysql://${DB_HOST:192.168.33.33}:${DB_PORT:3306}/master_db?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
-          username: myUser
-          password: myPassword
+          username: root
+          password: root_password
           driver-class-name: com.mysql.cj.jdbc.Driver
+
 
 dubbo:
   registry:

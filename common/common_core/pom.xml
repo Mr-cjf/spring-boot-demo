@@ -9,7 +9,25 @@
 
     <artifactId>common_core</artifactId>
     <url>https://maven.apache.org</url>
-    <description>项目通用配置,缓存,日志,工具类,常量,通用枚举</description>
+    <description>
+        Web 配置
+        CORS 跨域支持
+        默认返回 JSON 类型配置
+        自定义 Jackson 序列化规则（如 Long 转 String、时间类型序列化）
+        支持从字符串参数自动转换成 Date, LocalDate, LocalTime, LocalDateTime
+        Redis 缓存配置
+        RedisTemplate 的 key/value 序列化策略设置（使用 GenericJackson2JsonRedisSerializer）
+        支持 Spring Cache 的缓存配置（TTL、key前缀、null值缓存控制等）
+        Redisson 分布式锁配置
+        支持单机、哨兵、集群模式的 Redisson 客户端构建
+        提供 RedissonClient, RedissonReactiveClient, RedissonRxClient
+        1. 常用工具类
+        工具类 功能说明
+        Asserts 参数断言工具，抛出统一 BusinessException
+        Nones 空值判断工具（空对象、空字符串、空集合）
+        IdCards 身份证号格式校验
+        AppRegexPatternConst 常用正则表达式集合（手机号、身份证等）
+    </description>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>

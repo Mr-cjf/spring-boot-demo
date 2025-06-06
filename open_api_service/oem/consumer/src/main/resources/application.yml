@@ -1,6 +1,6 @@
 # 服务端口配置
 server:
-  port: 8081
+  port: 9098
 
 spring:
   # 应用名称

@@ -34,8 +34,6 @@ spring:
       time-to-live: 3d
   data:
     redis:
-      port: 6379
-      host: localhost
       timeout: 5000ms
       lettuce:
         pool:
