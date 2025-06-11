@@ -2,50 +2,64 @@ package top.cjf_rb.core.exception;
 
 
 import lombok.Getter;
-import top.cjf_rb.core.constant.AppSeparatorConst;
+import top.cjf_rb.core.constant.ErrorCodeEnum;
 
 /**
  * 业务异常
  */
 @Getter
-public class BusinessException extends RuntimeException {
+public class BusinessException extends AppException {
 
-    private static final String DELIMITER = AppSeparatorConst.SPACE.getSeparator();
 
-    private final ErrorCode errorCode;
-
-    private Object data;
-
-    private String description;
-
-    public BusinessException(ErrorCode errorCode) {
-        super(String.join(DELIMITER, errorCode.getCode(), errorCode.getMsg()));
-        this.errorCode = errorCode;
+    /**
+     * 构造函数，传入错误码
+     *
+     * @param errorCodeEnum 错误码
+     */
+    public BusinessException(ErrorCodeEnum errorCodeEnum) {
+        super(errorCodeEnum);
     }
 
-    public BusinessException(ErrorCode errorCode, String description) {
-        super(String.join(DELIMITER, errorCode.getCode(), errorCode.getMsg(), description));
-        this.errorCode = errorCode;
-        this.description = description;
+    /**
+     * 构造函数，传入错误码和描述
+     *
+     * @param errorCodeEnum 错误码
+     * @param description   描述
+     */
+    public BusinessException(ErrorCodeEnum errorCodeEnum, String description) {
+        super(errorCodeEnum, description);
     }
 
-    public BusinessException(ErrorCode errorCode, Throwable throwable) {
-        super(String.join(DELIMITER, errorCode.getCode(), errorCode.getMsg()), throwable);
-        this.errorCode = errorCode;
+    /**
+     * 构造函数，传入错误码和异常
+     *
+     * @param errorCodeEnum 错误码
+     * @param throwable     异常
+     */
+    public BusinessException(ErrorCodeEnum errorCodeEnum, Throwable throwable) {
+        super(errorCodeEnum, throwable);
     }
 
-    public BusinessException(ErrorCode errorCode, String description, Throwable throwable) {
-        super(String.join(DELIMITER, errorCode.getCode(), errorCode.getMsg(), description), throwable);
-        this.errorCode = errorCode;
-        this.description = description;
+    /**
+     * 构造函数，传入错误码、描述和异常
+     *
+     * @param errorCodeEnum 错误码
+     * @param description   描述
+     * @param throwable     异常
+     */
+    public BusinessException(ErrorCodeEnum errorCodeEnum, String description, Throwable throwable) {
+        super(errorCodeEnum, description, throwable);
     }
 
-    public BusinessException(ErrorCode errorCode, String description, Object data) {
-        super(String.join(DELIMITER, errorCode.getCode(), errorCode.getMsg(), description));
-        this.errorCode = errorCode;
-        this.description = description;
-        this.data = data;
+    /**
+     * 构造函数，传入错误码、描述和数据
+     *
+     * @param errorCodeEnum 错误码
+     * @param description   描述
+     * @param data          数据
+     */
+    public BusinessException(ErrorCodeEnum errorCodeEnum, String description, Object data) {
+        super(errorCodeEnum, description, data);
     }
-
 }
 

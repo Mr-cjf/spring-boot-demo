@@ -1,14 +1,15 @@
 package top.cjf_rb.core.constant;
 
-import top.cjf_rb.core.exception.ErrorCode;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * 业务错误码枚举集合
  *
- * @author lty
- * @since 1.0
  */
-public enum ErrorCodeEnum implements ErrorCode {
+@Getter
+@AllArgsConstructor
+public enum ErrorCodeEnum {
 
     /**
      * 未知错误
@@ -46,18 +47,9 @@ public enum ErrorCodeEnum implements ErrorCode {
 
     private final String msg;
 
-    ErrorCodeEnum(String msg) {
-        this.msg = msg;
-    }
-
-    @Override
     public String getCode() {
         return name();
     }
 
-    @Override
-    public String getMsg() {
-        return msg;
-    }
 }
 

@@ -41,3 +41,5 @@ spring:
           max-idle: 4
           min-idle: 1
           max-wait: 2000ms
+      host: dummy-host
+      port: 0

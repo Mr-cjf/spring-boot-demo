@@ -1,7 +1,7 @@
 package top.cjf_rb.core.util;
 
-import top.cjf_rb.core.constant.AppRegexPatternConst;
 import top.cjf_rb.core.constant.ErrorCodeEnum;
+import top.cjf_rb.core.constant.RegexPatternEnum;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * @author lty
  */
 public class IdCards {
-    public static final Pattern PATTERN = AppRegexPatternConst.ID_CARD.getPattern();
+    public static final Pattern PATTERN = RegexPatternEnum.ID_CARD.getPattern();
     private static final DateTimeFormatter formatter =
             DateTimeFormatter.ofPattern("uuuuMMdd").withResolverStyle(ResolverStyle.STRICT);
     private static final int[] COEFFICIENT = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};

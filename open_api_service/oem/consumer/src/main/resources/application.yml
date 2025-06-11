@@ -1,6 +1,6 @@
 # 服务端口配置
 server:
-  port: 9098
+  port: 9998
 
 spring:
   # 应用名称
@@ -55,3 +55,7 @@ logging:
   level:
     org.apache.dubbo.registry.configured: debug
     org.apache.dubbo.common.config.Environment: debug
+app:
+  exception:
+    handler:
+      type: "business"

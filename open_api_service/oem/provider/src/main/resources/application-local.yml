@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDR:192.168.33.33}
+  datasource:
+    dynamic:
+      primary: master   # 设置默认数据源
+      datasource:
+        master:
+          url: jdbc:mysql://${DB_HOST:192.168.33.33}:${DB_PORT:3306}/master_db?useSSL=true&allowPublicKeyRetrieval=true
+          username: root
+          password: root_password
+          driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+dubbo:
+  registry:
+    address: nacos://${NACOS_ADDR:192.168.33.33}
+  # 使用 Dubbo 3.x 推荐的元数据服务配置方式
+  metadata-report:
+    # 元数据服务地址（Nacos）
+    address: nacos://${NACOS_ADDR:192.168.33.33}

@@ -17,7 +17,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public final class Ciphertext implements Serializable {
     @Serial
-    private static final long serialVersionUID = AppSystemConst.SERIAL_VERSION_UID.getValueAs(Long.class);
+    private static final long serialVersionUID = AppSystemConst.SERIAL_VERSION_UID;
 
     private final String value;
 

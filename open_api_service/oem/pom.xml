@@ -9,7 +9,8 @@
     </parent>
     <packaging>pom</packaging>
     <modules>
-        <module>api_provider</module>
+        <module>api</module>
+        <module>provider</module>
         <module>consumer</module>
         <module>domain</module>
     </modules>

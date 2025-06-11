@@ -7,7 +7,7 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.cjf_rb.api_provider.api.service.HelloService;
+import top.cjf_rb.api.HelloServiceApiService;
 
 
 /**
@@ -20,12 +20,12 @@ import top.cjf_rb.api_provider.api.service.HelloService;
 @RequiredArgsConstructor
 public class OpenController {
     @DubboReference
-    private final HelloService helloService;
+    private HelloServiceApiService helloService;
 
 
     // test
     @RequestMapping("/hello")
     public String hello(@RequestParam("name") String name) {
-        return helloService.sayHello7(name);
+        return helloService.sayHello(name);
     }
 }

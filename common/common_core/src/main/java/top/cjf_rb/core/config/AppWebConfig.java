@@ -138,28 +138,53 @@ public class AppWebConfig implements WebMvcConfigurer {
 
     @Bean
     public Converter<String, Date> string2DateConverter() {
-        return source -> new Date(Long.parseLong(source));
+        return new Converter<String, Date>() {
+            @Override
+            public Date convert(String source) {
+                return new Date(Long.parseLong(source));
+            }
+        };
     }
 
     @Bean
     public Converter<String, Instant> string2InstantConverter() {
-        return source -> Instant.ofEpochMilli(Long.parseLong(source));
+        return new Converter<String, Instant>() {
+            @Override
+            public Instant convert(String source) {
+                return Instant.ofEpochMilli(Long.parseLong(source));
+            }
+        };
     }
 
     @Bean
     public Converter<String, LocalDateTime> string2LocalDateTimeConverter() {
-        return source -> LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(source)),
-                ZoneOffset.systemDefault());
+        return new Converter<String, LocalDateTime>() {
+            @Override
+            public LocalDateTime convert(String source) {
+                return LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(source)),
+                        ZoneOffset.systemDefault());
+            }
+        };
     }
 
     @Bean
     public Converter<String, LocalDate> string2LocalDateConverter() {
-        return source -> LocalDate.ofInstant(Instant.ofEpochMilli(Long.parseLong(source)), ZoneOffset.systemDefault());
+        return new Converter<String, LocalDate>() {
+            @Override
+            public LocalDate convert(String source) {
+                return LocalDate.ofInstant(Instant.ofEpochMilli(Long.parseLong(source)), ZoneOffset.systemDefault());
+            }
+        };
     }
 
     @Bean
     public Converter<String, LocalTime> string2LocalTimeConverter() {
-        return source -> LocalTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(source)), ZoneOffset.systemDefault());
+        return new Converter<String, LocalTime>() {
+            @Override
+            public LocalTime convert(String source) {
+                return LocalTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(source)), ZoneOffset.systemDefault());
+            }
+        };
     }
 
 }

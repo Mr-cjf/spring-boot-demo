@@ -13,8 +13,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>common_aut_interface</module>
         <module>common_core</module>
+        <module>common_redis</module>
+        <module>common_generator</module>
     </modules>
 
     <properties>
@@ -22,5 +23,15 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>top.cjf_rb</groupId>
+                <artifactId>common_core</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
