@@ -10,7 +10,9 @@ spring:
   # 指定当前激活的 Spring Profile，默认为 local
   profiles:
     active: ${PROFILES_ACTIVE:local}
-
+  data:
+    redis:
+      host: localhost
   # 数据库配置
   datasource:
     dynamic:

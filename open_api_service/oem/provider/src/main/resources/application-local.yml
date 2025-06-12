@@ -3,6 +3,9 @@ spring:
     nacos:
       discovery:
         server-addr: ${NACOS_ADDR:192.168.33.33}
+  data:
+    redis:
+      host: 192.168.33.33
   datasource:
     dynamic:
       primary: master   # 设置默认数据源

@@ -19,6 +19,9 @@ spring:
         port: 8848
         username: ${NACOS_USERNAME:admin}
         password: ${NACOS_PASSWORD:admin}
+  data:
+    redis:
+      host: localhost
 
 
 dubbo:

@@ -23,4 +23,5 @@ public final class AppServerConst {
     public static final String BASIC = "basic";
 
 
+    public static final String DEFAULT = "default";
 }
