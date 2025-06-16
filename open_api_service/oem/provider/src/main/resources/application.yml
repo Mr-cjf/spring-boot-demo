@@ -6,7 +6,6 @@ spring:
   # 应用名称
   application:
     name: provider
-
   # 指定当前激活的 Spring Profile，默认为 local
   profiles:
     active: ${PROFILES_ACTIVE:local}
@@ -70,6 +69,8 @@ dubbo:
     use-as-config-center: false
   consumer:
     check: false
+  provider:
+    filter: AppDubboGlobalProviderExceptionFilter,-exception
   # Dubbo 协议及端口配置
   protocol:
     name: dubbo  # 使用 Dubbo 协议

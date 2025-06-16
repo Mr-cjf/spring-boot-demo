@@ -31,8 +31,12 @@ public class AppWebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowCredentials(true).allowedMethods(CorsConfiguration.ALL)
-                .allowedHeaders(CorsConfiguration.ALL).allowedOriginPatterns(CorsConfiguration.ALL).maxAge(3600);
+        registry.addMapping("/**")
+                .allowCredentials(true)
+                .allowedMethods(CorsConfiguration.ALL)
+                .allowedHeaders(CorsConfiguration.ALL)
+                .allowedOriginPatterns(CorsConfiguration.ALL)
+                .maxAge(3600);
     }
 
     @Override
@@ -47,17 +51,22 @@ public class AppWebConfig implements WebMvcConfigurer {
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder) {
         // Long类型转字符串, 主要是因为JavaScript的Long类型精度比Java低的问题
         return jackson2ObjectMapperBuilder.serializerByType(Long.class, new JsonSerializer<Long>() {
-            @Override
-            public void serialize(Long value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-                String longValue = value.toString();
-                gen.writeString(longValue);
-            }
-        }).deserializerByType(Long.class, new JsonDeserializer<Long>() {
-            @Override
-            public Long deserialize(JsonParser p, DeserializationContext deserializationContext) throws IOException {
-                return Long.parseLong(p.getText().trim());
-            }
-        }).build();
+                                              @Override
+                                              public void serialize(Long value, JsonGenerator gen,
+                                                                    SerializerProvider serializers) throws IOException {
+                                                  String longValue = value.toString();
+                                                  gen.writeString(longValue);
+                                              }
+                                          })
+                                          .deserializerByType(Long.class, new JsonDeserializer<Long>() {
+                                              @Override
+                                              public Long deserialize(JsonParser p,
+                                                                      DeserializationContext deserializationContext) throws IOException {
+                                                  return Long.parseLong(p.getText()
+                                                                         .trim());
+                                              }
+                                          })
+                                          .build();
     }
 
     /**
@@ -66,74 +75,105 @@ public class AppWebConfig implements WebMvcConfigurer {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
         return jsonBuilder -> jsonBuilder.serializerByType(Instant.class, new JsonSerializer<Instant>() {
-            @Override
-            public void serialize(Instant value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-                gen.writeNumber(value.toEpochMilli());
-            }
-        }).serializerByType(LocalDateTime.class, new JsonSerializer<LocalDateTime>() {
-            @Override
-            public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers)
-                    throws IOException {
-                Instant instant = value.atZone(ZoneId.systemDefault()).toInstant();
-                gen.writeNumber(instant.toEpochMilli());
-            }
-        }).serializerByType(LocalDate.class, new JsonSerializer<LocalDate>() {
-            @Override
-            public void serialize(LocalDate value, JsonGenerator gen, SerializerProvider serializers)
-                    throws IOException {
-                Instant instant = value.atStartOfDay(ZoneId.systemDefault()).toInstant();
-                gen.writeNumber(instant.toEpochMilli());
-            }
-        }).serializerByType(LocalTime.class, new JsonSerializer<LocalTime>() {
-            @Override
-            public void serialize(LocalTime value, JsonGenerator gen, SerializerProvider serializers)
-                    throws IOException {
-                LocalDateTime localDateTime = LocalDate.now().atTime(value);
-                Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
-                gen.writeNumber(instant.toEpochMilli());
-            }
-        }).serializerByType(YearMonth.class, new JsonSerializer<YearMonth>() {
-            @Override
-            public void serialize(YearMonth value, JsonGenerator gen, SerializerProvider serializers)
-                    throws IOException {
-                gen.writeString(value.toString());
-            }
-        }).serializerByType(Ciphertext.class, new JsonSerializer<Ciphertext>() {
-            @Override
-            public void serialize(Ciphertext value, JsonGenerator gen, SerializerProvider serializerProvider)
-                    throws IOException {
-                gen.writeString(value.getValue());
-            }
-        }).deserializerByType(Instant.class, new JsonDeserializer<Instant>() {
-            @Override
-            public Instant deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-                String value = p.getText().trim();
-                return Instant.ofEpochMilli(Long.parseLong(value));
-            }
-        }).deserializerByType(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-            @Override
-            public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-                String value = p.getText().trim();
-                return LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(value)), ZoneOffset.systemDefault());
-            }
-        }).deserializerByType(LocalDate.class, new JsonDeserializer<LocalDate>() {
-            @Override
-            public LocalDate deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-                String value = p.getText().trim();
-                return LocalDate.ofInstant(Instant.ofEpochMilli(Long.parseLong(value)), ZoneOffset.systemDefault());
-            }
-        }).deserializerByType(LocalTime.class, new JsonDeserializer<LocalTime>() {
-            @Override
-            public LocalTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-                String value = p.getText().trim();
-                return LocalTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(value)), ZoneOffset.systemDefault());
-            }
-        }).deserializerByType(Ciphertext.class, new JsonDeserializer<Ciphertext>() {
-            @Override
-            public Ciphertext deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-                return new Ciphertext(p.getText().trim());
-            }
-        });
+                                             @Override
+                                             public void serialize(Instant value, JsonGenerator gen,
+                                                                   SerializerProvider serializers) throws IOException {
+                                                 gen.writeNumber(value.toEpochMilli());
+                                             }
+                                         })
+                                         .serializerByType(LocalDateTime.class, new JsonSerializer<LocalDateTime>() {
+                                             @Override
+                                             public void serialize(LocalDateTime value, JsonGenerator gen,
+                                                                   SerializerProvider serializers) throws IOException {
+                                                 Instant instant = value.atZone(ZoneId.systemDefault())
+                                                                        .toInstant();
+                                                 gen.writeNumber(instant.toEpochMilli());
+                                             }
+                                         })
+                                         .serializerByType(LocalDate.class, new JsonSerializer<LocalDate>() {
+                                             @Override
+                                             public void serialize(LocalDate value, JsonGenerator gen,
+                                                                   SerializerProvider serializers) throws IOException {
+                                                 Instant instant = value.atStartOfDay(ZoneId.systemDefault())
+                                                                        .toInstant();
+                                                 gen.writeNumber(instant.toEpochMilli());
+                                             }
+                                         })
+                                         .serializerByType(LocalTime.class, new JsonSerializer<LocalTime>() {
+                                             @Override
+                                             public void serialize(LocalTime value, JsonGenerator gen,
+                                                                   SerializerProvider serializers) throws IOException {
+                                                 LocalDateTime localDateTime = LocalDate.now()
+                                                                                        .atTime(value);
+                                                 Instant instant = localDateTime.atZone(ZoneId.systemDefault())
+                                                                                .toInstant();
+                                                 gen.writeNumber(instant.toEpochMilli());
+                                             }
+                                         })
+                                         .serializerByType(YearMonth.class, new JsonSerializer<YearMonth>() {
+                                             @Override
+                                             public void serialize(YearMonth value, JsonGenerator gen,
+                                                                   SerializerProvider serializers) throws IOException {
+                                                 gen.writeString(value.toString());
+                                             }
+                                         })
+                                         .serializerByType(Ciphertext.class, new JsonSerializer<Ciphertext>() {
+                                             @Override
+                                             public void serialize(Ciphertext value, JsonGenerator gen,
+                                                                   SerializerProvider serializerProvider) throws IOException {
+                                                 gen.writeString(value.getValue());
+                                             }
+                                         })
+                                         .deserializerByType(Instant.class, new JsonDeserializer<Instant>() {
+                                             @Override
+                                             public Instant deserialize(JsonParser p,
+                                                                        DeserializationContext ctxt) throws IOException {
+                                                 String value = p.getText()
+                                                                 .trim();
+                                                 return Instant.ofEpochMilli(Long.parseLong(value));
+                                             }
+                                         })
+                                         .deserializerByType(LocalDateTime.class,
+                                                             new JsonDeserializer<LocalDateTime>() {
+                                                                 @Override
+                                                                 public LocalDateTime deserialize(JsonParser p,
+                                                                                                  DeserializationContext ctxt) throws IOException {
+                                                                     String value = p.getText()
+                                                                                     .trim();
+                                                                     return LocalDateTime.ofInstant(
+                                                                             Instant.ofEpochMilli(
+                                                                                     Long.parseLong(value)),
+                                                                             ZoneOffset.systemDefault());
+                                                                 }
+                                                             })
+                                         .deserializerByType(LocalDate.class, new JsonDeserializer<LocalDate>() {
+                                             @Override
+                                             public LocalDate deserialize(JsonParser p,
+                                                                          DeserializationContext ctxt) throws IOException {
+                                                 String value = p.getText()
+                                                                 .trim();
+                                                 return LocalDate.ofInstant(Instant.ofEpochMilli(Long.parseLong(value)),
+                                                                            ZoneOffset.systemDefault());
+                                             }
+                                         })
+                                         .deserializerByType(LocalTime.class, new JsonDeserializer<LocalTime>() {
+                                             @Override
+                                             public LocalTime deserialize(JsonParser p,
+                                                                          DeserializationContext ctxt) throws IOException {
+                                                 String value = p.getText()
+                                                                 .trim();
+                                                 return LocalTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(value)),
+                                                                            ZoneOffset.systemDefault());
+                                             }
+                                         })
+                                         .deserializerByType(Ciphertext.class, new JsonDeserializer<Ciphertext>() {
+                                             @Override
+                                             public Ciphertext deserialize(JsonParser p,
+                                                                           DeserializationContext ctxt) throws IOException {
+                                                 return new Ciphertext(p.getText()
+                                                                        .trim());
+                                             }
+                                         });
     }
 
     @Bean
@@ -162,7 +202,7 @@ public class AppWebConfig implements WebMvcConfigurer {
             @Override
             public LocalDateTime convert(String source) {
                 return LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(source)),
-                        ZoneOffset.systemDefault());
+                                               ZoneOffset.systemDefault());
             }
         };
     }

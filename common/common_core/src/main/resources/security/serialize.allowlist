@@ -1,0 +1,5 @@
+top.cjf_rb.core.exception.BasicException
+top.cjf_rb.core.exception.BusinessException
+top.cjf_rb.core.exception.ThirdPartyServerException
+top.cjf_rb.core.exception.InternalServerException
+top.cjf_rb.core.exception.AppException

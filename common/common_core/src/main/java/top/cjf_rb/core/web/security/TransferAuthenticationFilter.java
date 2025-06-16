@@ -37,6 +37,8 @@ public class TransferAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("【调试】TransferAuthenticationFilter 正在处理请求: " + request.getRequestURI());
+
         // 是否需要认证
         if (!authenticationIsRequired()) {
             filterChain.doFilter(request, response);
@@ -64,8 +66,8 @@ public class TransferAuthenticationFilter extends OncePerRequestFilter {
         String userIdStr = request.getHeader(AppHeaderConst.CURRENT_USER);
         String clientAgent = request.getHeader(AppHeaderConst.CLIENT_AGENT);
         if (Nones.isBlank(userIdStr) || Nones.isBlank(clientAgent)) {
-            String formatted =
-                    MessageFormat.format("请求头缺失，X-Current-User={0}, X-Client-Agent={1}", userIdStr, clientAgent);
+            String formatted = MessageFormat.format("请求头缺失，{0}={1}, {2}={3}", AppHeaderConst.CURRENT_USER,
+                                                    userIdStr, AppHeaderConst.CLIENT_AGENT, clientAgent);
             throw new InternalAuthenticationServiceException(formatted);
         }
 
@@ -81,13 +83,13 @@ public class TransferAuthenticationFilter extends OncePerRequestFilter {
             // 显式转换为 Long 防止后续误用
             Long userId = Long.parseLong(userIdStr);
 
-            AuthenticatedUser authUser = authUserAccessor.get(agentEnum, userId).orElseThrow(
-                    () -> new InternalAuthenticationServiceException("用户不存在: " + userIdStr)
-            );
+            AuthenticatedUser authUser = authUserAccessor.get(agentEnum, userId)
+                                                         .orElseThrow(() -> new InternalAuthenticationServiceException(
+                                                                 "用户不存在: " + userIdStr));
 
             // 构建已认证的 AuthenticationToken
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(authUser.getUsername(), null, authUser.getAuthorities());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    authUser.getUsername(), null, authUser.getAuthorities());
             authentication.setDetails(authUser);
 
             SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -103,7 +105,8 @@ public class TransferAuthenticationFilter extends OncePerRequestFilter {
      * 是否需要认证
      */
     private boolean authenticationIsRequired() {
-        Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication existingAuth = SecurityContextHolder.getContext()
+                                                           .getAuthentication();
         if (existingAuth == null || !existingAuth.isAuthenticated()) {
             return true;
         }

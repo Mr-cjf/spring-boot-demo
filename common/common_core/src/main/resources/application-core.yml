@@ -12,6 +12,8 @@ spring:
     multipart:
       max-file-size: 4MB
       max-request-size: 20MB
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   web:
     resources:
       add-mappings: false
@@ -43,3 +45,7 @@ spring:
           max-wait: 2000ms
       host: dummy-host
       port: 0
+dubbo:
+  protocol:
+    name: dubbo
+    serialization: json2

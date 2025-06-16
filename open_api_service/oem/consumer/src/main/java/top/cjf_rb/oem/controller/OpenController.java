@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.cjf_rb.api.HelloServiceApiService;
 
 
-/**
- * @author lty
- * @since 1.0
+/**\
  */
 @Slf4j
 @RestController
@@ -22,7 +20,6 @@ import top.cjf_rb.api.HelloServiceApiService;
 public class OpenController {
     @DubboReference
     private HelloServiceApiService helloService;
-
 
     // test
     @GetMapping("/hello")

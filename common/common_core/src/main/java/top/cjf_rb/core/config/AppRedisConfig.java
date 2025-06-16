@@ -3,10 +3,12 @@ package top.cjf_rb.core.config;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -26,17 +28,18 @@ public class AppRedisConfig {
 
     private final CacheProperties cacheProperties;
 
+
     /**
      * 配置RedisTemplate, 更改 key 和 value 的序列化器
      *
      * @param redisConnectionFactory RedisConnectionFactory
-     * @return RedisTemplate
      * @see org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
      */
-    @Bean
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory,
-                                                       GenericJackson2JsonRedisSerializer jsonRedisSerializer) {
-        RedisTemplate<Object, Object> template = new RedisTemplate<>();
+    @Autowired
+    public void customizeRedisTemplate(RedisTemplate<Object, Object> template,
+                                       RedisConnectionFactory redisConnectionFactory,
+                                       @Lazy GenericJackson2JsonRedisSerializer jsonRedisSerializer) {
+        //RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
         // redis key 使用字符串序列化器
@@ -46,8 +49,6 @@ public class AppRedisConfig {
         // redis value 使用GenericJackson2JsonRedisSerializer 序列化器
         template.setValueSerializer(jsonRedisSerializer);
         template.setHashValueSerializer(jsonRedisSerializer);
-
-        return template;
     }
 
     @Bean

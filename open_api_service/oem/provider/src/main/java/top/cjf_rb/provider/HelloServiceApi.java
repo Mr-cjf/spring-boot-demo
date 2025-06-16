@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import top.cjf_rb.annotation.AutoDubboService;
+import top.cjf_rb.core.constant.ErrorCodeEnum;
+import top.cjf_rb.core.exception.AppException;
 
 @DubboService
 @RequiredArgsConstructor
@@ -19,11 +21,11 @@ public class HelloServiceApi {
     @Resource
     private ObjectMapper ObjectMapper2;
 
-    public String sayHello(String name) {
+    public String sayHello(String name) throws AppException {
         // 返回一个字符串，内容为"Hello "加上传入的name参数
         System.out.println("Hello " + name);
         if (name != null) {
-            throw new RuntimeException("测试异常");
+            throw new AppException(ErrorCodeEnum.PARAMS_INCORRECT, "name不能为空");
         }
 
         return "Hello " + name;

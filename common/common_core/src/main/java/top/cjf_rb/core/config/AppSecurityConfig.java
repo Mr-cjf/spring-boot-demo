@@ -1,11 +1,10 @@
 package top.cjf_rb.core.config;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
@@ -34,58 +33,55 @@ import top.cjf_rb.core.web.security.TransferAuthenticationConfig;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@Import({AppSecurityProperties.class})
 public class AppSecurityConfig {
     @Resource
     private ObjectMapper objectMapper;
     @Resource
     private AppSecurityProperties appSecurityProperties;
-    @Resource
-    private AuthUserAccessor authUserAccessor;
+
+    @Bean
+    public TransferAuthenticationConfig transferAuthenticationConfig(AuthenticationFailureHandler failureHandler,
+                                                                     AuthUserAccessor authUserAccessor) {
+        return new TransferAuthenticationConfig(failureHandler, authUserAccessor);
+    }
+
 
     /**
      * 提供默认的{@link HttpSecurity}配置
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // 禁用默认
-        http.securityContext(AbstractHttpConfigurer::disable);
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.anonymous(AbstractHttpConfigurer::disable);
-        http.httpBasic(AbstractHttpConfigurer::disable);
-        http.formLogin(AbstractHttpConfigurer::disable);
-        http.cors(Customizer.withDefaults());
+    @Order(1) // 设置为最高优先级
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   TransferAuthenticationConfig transferAuthenticationConfig) throws Exception {
+        // 禁用默认安全机制
+        http.securityMatcher("/**") // 明确匹配所有路径
+            .securityContext(AbstractHttpConfigurer::disable)
+            .csrf(AbstractHttpConfigurer::disable)
+            .anonymous(AbstractHttpConfigurer::disable)
+            .httpBasic(AbstractHttpConfigurer::disable)
+            .formLogin(AbstractHttpConfigurer::disable)
+            .cors(Customizer.withDefaults())
+            .logout(AbstractHttpConfigurer::disable)
+            .sessionManagement(AbstractHttpConfigurer::disable);
+        // 添加 URL 匹配规则
+        http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(HttpMethod.OPTIONS)
+                                                                                 .permitAll()
+                                                                                 .anyRequest()
+                                                                                 .authenticated());
 
-        // 注销
-        http.logout(AbstractHttpConfigurer::disable);
+        // 异常处理
+        http.exceptionHandling(
+                (exceptionHandling) -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint())
+                                                        .accessDeniedHandler(accessDeniedHandler()));
 
-        // 不需要 session
-        http.sessionManagement(AbstractHttpConfigurer::disable);
-
-        // 无需鉴权
-        http.authorizeHttpRequests((authorizeRequests) -> authorizeRequests.requestMatchers(HttpMethod.OPTIONS)
-                .permitAll()
-                .anyRequest().permitAll());
-
-        // 认证/鉴权异常
-        http.exceptionHandling((exceptionHandling) -> exceptionHandling
-                .authenticationEntryPoint(authenticationEntryPoint()).accessDeniedHandler(accessDeniedHandler()));
-
-        // http 响应头
-        http.headers((headers) -> headers.defaultsDisabled().cacheControl(Customizer.withDefaults())
-                .frameOptions(Customizer.withDefaults()));
-
-        // 自定义的认证流程：验证登录
-        TransferAuthenticationConfig authenticationConfig =
-                TransferAuthenticationConfig.getInstance(failureHandler(), authUserAccessor);
-        http.with(authenticationConfig, Customizer.withDefaults());
-
+        // 响应头设置
+        http.headers((headers) -> headers.defaultsDisabled()
+                                         .cacheControl(Customizer.withDefaults())
+                                         .frameOptions(Customizer.withDefaults()));
+        http.with(transferAuthenticationConfig, Customizer.withDefaults());
         return http.build();
     }
 
@@ -95,9 +91,12 @@ public class AppSecurityConfig {
         String[] permitStaticUris = appSecurityProperties.getPermitStaticUris();
         String[] permitActuatorUris = appSecurityProperties.getPermitActuatorUris();
         // 设置全局静态资源忽略
-        return (web) -> web.ignoring().requestMatchers(permitUris).requestMatchers(permitStaticUris)
-                .requestMatchers(permitActuatorUris);
+        return (web) -> web.ignoring()
+                           .requestMatchers(permitUris)
+                           .requestMatchers(permitStaticUris)
+                           .requestMatchers(permitActuatorUris);
     }
+
 
     /**
      * 认证失败处理
@@ -138,5 +137,4 @@ public class AppSecurityConfig {
         encoders.put("argon2", Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8());
         return new DelegatingPasswordEncoder(encodingId, encoders);
     }
-
 }

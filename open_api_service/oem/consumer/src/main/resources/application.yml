@@ -23,7 +23,6 @@ spring:
     redis:
       host: localhost
 
-
 dubbo:
   # Dubbo 应用配置，使用 Spring 的应用名
   application:

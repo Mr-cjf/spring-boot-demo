@@ -15,13 +15,10 @@ public class TransferAuthenticationConfig extends AbstractHttpConfigurer<Transfe
     private final AuthenticationFailureHandler failureHandler;
     private final AuthUserAccessor authUserAccessor;
 
-    public static TransferAuthenticationConfig getInstance(AuthenticationFailureHandler failureHandler,
-                                                           AuthUserAccessor authUserAccessor) {
-        return new TransferAuthenticationConfig(failureHandler, authUserAccessor);
-    }
 
     @Override
     public void configure(HttpSecurity http) {
+        System.out.println("【调试】当前请求正在经过 TransferAuthenticationConfig");
         TransferAuthenticationFilter authFilter = new TransferAuthenticationFilter(failureHandler, authUserAccessor);
         http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
     }

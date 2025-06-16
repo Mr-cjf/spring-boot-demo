@@ -4,6 +4,7 @@ package top.cjf_rb.core.support;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.lang.NonNull;
@@ -34,6 +35,7 @@ public class AuthUserAccessor {
     @Resource
     private ObjectMapper objectMapper;
     @Resource
+    @Lazy
     private RedisTemplate<Serializable, String> redisTemplate;
 
     /**
