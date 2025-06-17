@@ -13,7 +13,7 @@
     <name>common_generator Maven Plugin</name>
 
     <!-- FIXME change it to the project's website -->
-    <url>http://maven.apache.org</url>
+    <url>https://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

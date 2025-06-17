@@ -2,7 +2,6 @@ package top.cjf_rb.core.exception;
 
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import top.cjf_rb.core.constant.ErrorCodeEnum;
 import top.cjf_rb.core.constant.SeparatorEnum;
 
@@ -11,7 +10,6 @@ import java.util.function.BiFunction;
 /**
  * 业务异常
  */
-@Slf4j
 @Getter
 public class AppException extends RuntimeException {
 
