@@ -1,4 +1,4 @@
-package top.cjf_rb.core.context;
+package top.cjf_rb.security.pojo.bo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -21,7 +21,7 @@ import java.util.Set;
  */
 @Data
 @Accessors(chain = true)
-public class AuthenticatedUser implements UserDetails, CredentialsContainer {
+public class AuthenticatedUserBo implements UserDetails, CredentialsContainer {
     @Serial
     private static final long serialVersionUID = AppSystemConst.SERIAL_VERSION_UID;
     /**
@@ -86,13 +86,13 @@ public class AuthenticatedUser implements UserDetails, CredentialsContainer {
      */
     private Object details;
 
-    public static AuthenticatedUser of(Long userId, String name, String phoneNo) {
-        return new AuthenticatedUser().setUserId(userId).setName(name).setPhoneNo(phoneNo);
+    public static AuthenticatedUserBo of(Long userId, String name, String phoneNo) {
+        return new AuthenticatedUserBo().setUserId(userId).setName(name).setPhoneNo(phoneNo);
     }
 
-    public static AuthenticatedUser of(Long userId, String name, String phoneNo,
-                                       Set<? extends GrantedAuthority> authorities) {
-        return new AuthenticatedUser().setUserId(userId).setName(name).setPhoneNo(phoneNo).setAuthorities(authorities);
+    public static AuthenticatedUserBo of(Long userId, String name, String phoneNo,
+                                         Set<? extends GrantedAuthority> authorities) {
+        return new AuthenticatedUserBo().setUserId(userId).setName(name).setPhoneNo(phoneNo).setAuthorities(authorities);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class AuthenticatedUser implements UserDetails, CredentialsContainer {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof AuthenticatedUser user) {
+        if (obj instanceof AuthenticatedUserBo user) {
             return this.userId.equals(user.userId);
         }
         return false;

@@ -1,4 +1,4 @@
-package top.cjf_rb.core.web.security;
+package top.cjf_rb.security.web.security;
 
 
 import jakarta.servlet.FilterChain;
@@ -18,15 +18,15 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.web.filter.OncePerRequestFilter;
 import top.cjf_rb.core.constant.AppHeaderConst;
 import top.cjf_rb.core.constant.ClientAgentEnum;
-import top.cjf_rb.core.context.AuthenticatedUser;
-import top.cjf_rb.core.support.AuthUserAccessor;
+import top.cjf_rb.security.pojo.bo.AuthenticatedUserBo;
+import top.cjf_rb.security.support.AuthUserAccessor;
 import top.cjf_rb.core.util.Nones;
 
 import java.io.IOException;
 import java.text.MessageFormat;
 
 /**
- * @author lty
+ * 认证过滤器
  */
 @RequiredArgsConstructor
 public class TransferAuthenticationFilter extends OncePerRequestFilter {
@@ -37,7 +37,7 @@ public class TransferAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("【调试】TransferAuthenticationFilter 正在处理请求: " + request.getRequestURI());
+        System.out.println("TransferAuthenticationFilter 正在处理请求: " + request.getRequestURI());
 
         // 是否需要认证
         if (!authenticationIsRequired()) {
@@ -83,8 +83,8 @@ public class TransferAuthenticationFilter extends OncePerRequestFilter {
             // 显式转换为 Long 防止后续误用
             Long userId = Long.parseLong(userIdStr);
 
-            AuthenticatedUser authUser = authUserAccessor.get(agentEnum, userId)
-                                                         .orElseThrow(() -> new InternalAuthenticationServiceException(
+            AuthenticatedUserBo authUser = authUserAccessor.get(agentEnum, userId)
+                                                           .orElseThrow(() -> new InternalAuthenticationServiceException(
                                                                  "用户不存在: " + userIdStr));
 
             // 构建已认证的 AuthenticationToken

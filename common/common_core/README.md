@@ -58,6 +58,14 @@ public RedissonClient redisson() { ...}
 
 ---
 
+### 4. Dubbo 全局异常处理
+
+- **Dubbo服务提供者全局异常拦截器**
+- **统一转换业务异常为预定义异常类型**
+- **支持异常类型映射和自定义处理**
+
+---
+
 ## ⚙️ 三、工具类与常量管理
 
 ### 1. 常用工具类
@@ -73,12 +81,15 @@ public RedissonClient redisson() { ...}
 
 ### 2. 系统常量枚举
 
-| 枚举类                    | 功能说明                    |
-|------------------------|-------------------------|
-| `AppSystemConst`       | 系统级别常量（日期格式、状态标识、UID 等） |
-| `ErrorCodeEnum`        | 业务错误码枚举集合               |
-| `AppSeparatorConst`    | 各种分隔符定义                 |
-| `AppRegexPatternConst` | 正则表达式集合                 |
+| 常量类/枚举类            | 功能说明                    |
+|--------------------|-------------------------|
+| `AppSystemConst`   | 系统级别常量（日期格式、状态标识、UID 等） |
+| `ErrorCodeEnum`    | 业务错误码枚举集合               |
+| `SeparatorEnum`    | 各种分隔符定义                 |
+| `RegexPatternEnum` | 常用正则表达式集合（手机号、身份证等）     |
+| `AppHeaderConst`   | HTTP请求头常量定义             |
+| `AppServerConst`   | 服务类型常量定义                |
+| `ClientAgentEnum`  | 客户端代理类型枚举               |
 
 ---
 
@@ -221,7 +232,7 @@ public interface Modify {
 
 将该模块打包为 jar，在其他模块中引入即可直接使用：
 
-```xml
+```
 
 <dependency>
     <groupId>top.cjf_rb</groupId>
@@ -263,7 +274,7 @@ src/
 
 ### 1. Maven 依赖说明
 
-```xml
+```
 
 <dependencies>
     <!-- Spring -->
@@ -347,6 +358,3 @@ spring:
           max-idle: 4
           min-idle: 1
           max-wait: 2000ms
-```
-
----

@@ -1,4 +1,4 @@
-package top.cjf_rb.core.web.security.exception;
+package top.cjf_rb.security.web.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

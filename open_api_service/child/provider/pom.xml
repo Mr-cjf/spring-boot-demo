@@ -118,7 +118,6 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <outputFilterFile>true</outputFilterFile>
-                            <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,4 +1,4 @@
-package top.cjf_rb.core.web.security;
+package top.cjf_rb.security.web.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

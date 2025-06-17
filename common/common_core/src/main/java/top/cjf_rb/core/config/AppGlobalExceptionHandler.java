@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import top.cjf_rb.core.constant.AppServerConst;
 import top.cjf_rb.core.exception.*;
-import top.cjf_rb.core.pojo.prop.AppExceptionHandler;
 import top.cjf_rb.core.pojo.vo.ErrorVo;
+import top.cjf_rb.core.prop.AppExceptionHandler;
 
 import java.util.HashMap;
 import java.util.Map;

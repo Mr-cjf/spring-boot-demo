@@ -1,4 +1,4 @@
-package top.cjf_rb.core.pojo.prop;
+package top.cjf_rb.security.prop;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

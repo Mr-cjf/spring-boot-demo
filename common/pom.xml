@@ -14,6 +14,8 @@
 
     <modules>
         <module>common_core</module>
+        <module>common_redis</module>
+        <module>common_security</module>
         <module>common_generator</module>
     </modules>
 

@@ -1,0 +1,18 @@
+# spring config
+spring:
+  cache:
+    redis:
+      cache-null-values: true
+      key-prefix: "${spring.application.name}:"
+      time-to-live: 3d
+  data:
+    redis:
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 4
+          min-idle: 1
+          max-wait: 2000ms
+      host: dummy-host
+      port: 0

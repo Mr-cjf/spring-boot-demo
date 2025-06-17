@@ -1,4 +1,4 @@
-package top.cjf_rb.core.config;
+package top.cjf_rb.redis.config;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;

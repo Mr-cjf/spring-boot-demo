@@ -1,4 +1,4 @@
-package top.cjf_rb.core.config;
+package top.cjf_rb.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
@@ -24,11 +24,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import top.cjf_rb.core.pojo.prop.AppSecurityProperties;
-import top.cjf_rb.core.support.AuthUserAccessor;
-import top.cjf_rb.core.web.security.AppAuthenticationEntryPoint;
-import top.cjf_rb.core.web.security.HttpStatusAccessDeniedHandler;
-import top.cjf_rb.core.web.security.TransferAuthenticationConfig;
+import top.cjf_rb.security.prop.AppSecurityProperties;
+import top.cjf_rb.security.support.AuthUserAccessor;
+import top.cjf_rb.security.web.security.AppAuthenticationEntryPoint;
+import top.cjf_rb.security.web.security.HttpStatusAccessDeniedHandler;
+import top.cjf_rb.security.web.security.TransferAuthenticationConfig;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package top.cjf_rb.core.web.security;
+package top.cjf_rb.security.web.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,8 +12,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import top.cjf_rb.core.constant.ErrorCodeEnum;
 import top.cjf_rb.core.pojo.vo.ErrorVo;
-import top.cjf_rb.core.web.security.exception.InvalidCaptchaException;
-import top.cjf_rb.core.web.security.exception.SqueezedOfflineException;
+import top.cjf_rb.security.web.security.exception.InvalidCaptchaException;
+import top.cjf_rb.security.web.security.exception.SqueezedOfflineException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

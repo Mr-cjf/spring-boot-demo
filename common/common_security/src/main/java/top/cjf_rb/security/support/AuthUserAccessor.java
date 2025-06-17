@@ -1,4 +1,4 @@
-package top.cjf_rb.core.support;
+package top.cjf_rb.security.support;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,7 +11,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import top.cjf_rb.core.constant.ClientAgentEnum;
-import top.cjf_rb.core.context.AuthenticatedUser;
+import top.cjf_rb.security.pojo.bo.AuthenticatedUserBo;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -29,9 +29,6 @@ public class AuthUserAccessor {
 
     private static final String keyPrefix = "beego:authenticatedUser:";
     private static final Duration expired = Duration.ofHours(12L);
-    /**
-     * 为了兼容跨系统
-     */
     @Resource
     private ObjectMapper objectMapper;
     @Resource
@@ -52,7 +49,7 @@ public class AuthUserAccessor {
         return keyPrefix + type + ":" + identifier;
     }
 
-    public void set(@NonNull ClientAgentEnum type, @NonNull Serializable identifier, AuthenticatedUser content) {
+    public void set(@NonNull ClientAgentEnum type, @NonNull Serializable identifier, AuthenticatedUserBo content) {
 
         String key = generateKey(type, identifier);
 
@@ -64,7 +61,7 @@ public class AuthUserAccessor {
         }
     }
 
-    public Optional<AuthenticatedUser> get(@NonNull ClientAgentEnum type, @NonNull Serializable identifier) {
+    public Optional<AuthenticatedUserBo> get(@NonNull ClientAgentEnum type, @NonNull Serializable identifier) {
 
         String key = generateKey(type, identifier);
 
@@ -75,7 +72,7 @@ public class AuthUserAccessor {
         }
 
         try {
-            return Optional.of(objectMapper.readValue(s, AuthenticatedUser.class));
+            return Optional.of(objectMapper.readValue(s, AuthenticatedUserBo.class));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

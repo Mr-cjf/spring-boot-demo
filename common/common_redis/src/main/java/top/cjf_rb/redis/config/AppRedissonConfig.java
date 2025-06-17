@@ -1,4 +1,4 @@
-package top.cjf_rb.core.config;
+package top.cjf_rb.redis.config;
 
 
 import lombok.RequiredArgsConstructor;

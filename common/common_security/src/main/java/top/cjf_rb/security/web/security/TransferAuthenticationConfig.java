@@ -1,4 +1,4 @@
-package top.cjf_rb.core.web.security;
+package top.cjf_rb.security.web.security;
 
 
 import lombok.RequiredArgsConstructor;
@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import top.cjf_rb.core.support.AuthUserAccessor;
+import top.cjf_rb.security.support.AuthUserAccessor;
 
 
 @RequiredArgsConstructor
@@ -18,7 +18,6 @@ public class TransferAuthenticationConfig extends AbstractHttpConfigurer<Transfe
 
     @Override
     public void configure(HttpSecurity http) {
-        System.out.println("【调试】当前请求正在经过 TransferAuthenticationConfig");
         TransferAuthenticationFilter authFilter = new TransferAuthenticationFilter(failureHandler, authUserAccessor);
         http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
     }

@@ -1,4 +1,4 @@
-package top.cjf_rb.core.pojo.prop;
+package top.cjf_rb.core.prop;
 
 
 import lombok.Data;
