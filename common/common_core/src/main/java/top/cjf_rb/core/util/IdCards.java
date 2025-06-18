@@ -14,9 +14,8 @@ import java.util.regex.Pattern;
 /**
  * 身份证号校工具
  *
- * @author lty
  */
-public class IdCards {
+public final class IdCards {
     public static final Pattern PATTERN = RegexPatternEnum.ID_CARD.getPattern();
     private static final DateTimeFormatter formatter =
             DateTimeFormatter.ofPattern("uuuuMMdd").withResolverStyle(ResolverStyle.STRICT);

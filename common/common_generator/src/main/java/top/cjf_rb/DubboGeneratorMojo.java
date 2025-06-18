@@ -19,7 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-@Mojo(name = "generate-dubbo", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
+@Mojo(name = "generate-dubbo", defaultPhase = LifecyclePhase.GENERATE_SOURCES, threadSafe = true)
 public class DubboGeneratorMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project}", required = true)
@@ -71,7 +71,7 @@ public class DubboGeneratorMojo extends AbstractMojo {
             getLog().info("实现类包名: " + implPkg);
 
             for (ClassInfo serviceClass : serviceClasses) {
-                getLog().info("处理类: " + serviceClass.getClassName());
+                getLog().info("处理类: " + serviceClass.className());
                 generateDubboFiles(serviceClass, interfacePkg, implPkg);
             }
 
@@ -84,7 +84,8 @@ public class DubboGeneratorMojo extends AbstractMojo {
     private Set<ClassInfo> scanCurrentModule() {
         Set<ClassInfo> serviceClasses = new HashSet<>();
 
-        String sourceDir = project.getBuild().getSourceDirectory();
+        String sourceDir = project.getBuild()
+                                  .getSourceDirectory();
         File dir = new File(sourceDir);
 
         if (dir.exists()) {
@@ -98,23 +99,27 @@ public class DubboGeneratorMojo extends AbstractMojo {
         for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file.isDirectory()) {
                 scanJavaFiles(file, packageName + "." + file.getName(), serviceClasses);
-            } else if (file.getName().endsWith(".java")) {
+            } else if (file.getName()
+                           .endsWith(".java")) {
                 try {
-                    CompilationUnit cu =
-                            new JavaParser().parse(file).getResult().orElseThrow(() -> new RuntimeException("解析文件失败: "
-                                    + file.getName()));
+                    CompilationUnit cu = new JavaParser().parse(file)
+                                                         .getResult()
+                                                         .orElseThrow(() -> new RuntimeException(
+                                                                 "解析文件失败: " + file.getName()));
 
 
                     ClassOrInterfaceDeclaration classDecl = cu.findFirst(ClassOrInterfaceDeclaration.class)
-                            .orElseThrow(() -> new RuntimeException("No class found in file: " + file.getName()));
+                                                              .orElseThrow(() -> new RuntimeException(
+                                                                      "No class found" + " in " + "file: " + file.getName()));
 
                     String className = classDecl.getNameAsString();
 
                     // 如果类已经有完整的 package 声明，则使用它的全限定名
-                    Optional<String> classPackage = cu.getPackageDeclaration().map(NodeWithName::getNameAsString);
+                    Optional<String> classPackage = cu.getPackageDeclaration()
+                                                      .map(NodeWithName::getNameAsString);
 
                     String fullClassName = classPackage.map(pkg -> pkg + "." + className)
-                            .orElse(packageName + "." + className);
+                                                       .orElse(packageName + "." + className);
 
                     // 跳过 impl 包下的类
                     if (fullClassName.contains("service.")) {
@@ -136,17 +141,18 @@ public class DubboGeneratorMojo extends AbstractMojo {
 
     private boolean hasAutoDubboServiceAnnotation(CompilationUnit cu) {
         return cu.findAll(ClassOrInterfaceDeclaration.class)
-                .stream()
-                .anyMatch(c -> c.getAnnotations()
-                        .stream()
-                        .anyMatch(a -> a.getNameAsString().equals("AutoDubboService")));
+                 .stream()
+                 .anyMatch(c -> c.getAnnotations()
+                                 .stream()
+                                 .anyMatch(a -> a.getNameAsString()
+                                                 .equals("AutoDubboService")));
     }
 
     private void generateDubboFiles(ClassInfo serviceClass, String interfacePkg, String implPkg) throws IOException {
 
 
         // 构造接口和实现类的名称
-        String simpleName = extractSimpleName(serviceClass.getClassName());
+        String simpleName = extractSimpleName(serviceClass.className());
         String interfaceName = simpleName + serviceSuffix;
         String implName = simpleName + implSuffix;
 
@@ -166,26 +172,29 @@ public class DubboGeneratorMojo extends AbstractMojo {
 
     private String extractSimpleName(String fullyQualifiedName) {
         int lastDotIndex = fullyQualifiedName.lastIndexOf('.');
-        return (lastDotIndex >= 0)
-                ? fullyQualifiedName.substring(lastDotIndex + 1)
-                : fullyQualifiedName;
+        return (lastDotIndex >= 0) ? fullyQualifiedName.substring(lastDotIndex + 1) : fullyQualifiedName;
     }
 
     private String generateInterfaceCode(ClassInfo serviceClass, String pkg, String interfaceName) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("package ").append(pkg).append(";\n\n");
-        sb.append("public interface ").append(interfaceName).append(" {\n");
+        StringBuilder sb = new StringBuilder(); sb.append("package ")
+                                                  .append(pkg)
+                                                  .append(";\n\n"); sb.append("public interface ")
+                                                                      .append(interfaceName)
+                                                                      .append(" {\n");
 
         for (MethodDeclaration method : serviceClass.getMethods()) {
             sb.append("    ")
-                    .append(typeToString(method.getType()))
-                    .append(" ")
-                    .append(method.getName())
-                    .append("(");
+              .append(typeToString(method.getType()))
+              .append(" ")
+              .append(method.getName())
+              .append("(");
 
             List<com.github.javaparser.ast.body.Parameter> params = method.getParameters();
             for (int i = 0; i < params.size(); i++) {
-                sb.append(typeToString(params.get(i).getType())).append(" arg").append(i);
+                sb.append(typeToString(params.get(i)
+                                             .getType()))
+                  .append(" arg")
+                  .append(i);
                 if (i < params.size() - 1) sb.append(", ");
             }
             sb.append(");\n\n");
@@ -195,47 +204,66 @@ public class DubboGeneratorMojo extends AbstractMojo {
     }
 
     private String generateImplCode(ClassInfo serviceClass, String pkg, String implName, String interfaceName) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("package ").append(pkg).append(";\n\n");
+        StringBuilder sb = new StringBuilder(); sb.append("package ")
+                                                  .append(pkg)
+                                                  .append(";\n\n");
         sb.append("import org.apache.dubbo.config.annotation.DubboService;\n");
         sb.append("import org.springframework.stereotype.Service;\n\n");
 
-        sb.append("import ").append(basePackage).append(".").append(interfaceModuleName).append(".").append(interfaceName).append(";\n");
+        sb.append("import ")
+          .append(basePackage)
+          .append(".")
+          .append(interfaceModuleName)
+          .append(".")
+          .append(interfaceName)
+          .append(";\n");
 
-        sb.append("@Service\n");
-        sb.append("@DubboService\n");
-        sb.append("public class ").append(implName).append(" implements ")
-                .append(interfaceName).append(" {\n\n");
+        sb.append("@Service\n"); sb.append("@DubboService\n"); sb.append("public class ")
+                                                                 .append(implName)
+                                                                 .append(" implements ")
+                                                                 .append(interfaceName)
+                                                                 .append(" {\n\n");
 
-        sb.append("    private final ").append(serviceClass.getClassName()).append(" delegate;\n\n");
+        sb.append("    private final ")
+          .append(serviceClass.className())
+          .append(" delegate;\n\n");
 
-        sb.append("    public ").append(implName).append("(")
-                .append(serviceClass.getClassName()).append(" delegate) {\n")
-                .append("        this.delegate = delegate;\n")
-                .append("    }\n\n");
+        sb.append("    public ")
+          .append(implName)
+          .append("(")
+          .append(serviceClass.className())
+          .append(" delegate) {\n")
+          .append("        this.delegate = delegate;\n")
+          .append("    }\n\n");
 
         for (MethodDeclaration method : serviceClass.getMethods()) {
             sb.append("    @Override\n")
-                    .append("    public ")
-                    .append(typeToString(method.getType()))
-                    .append(" ")
-                    .append(method.getName())
-                    .append("(");
+              .append("    public ")
+              .append(typeToString(method.getType()))
+              .append(" ")
+              .append(method.getName())
+              .append("(");
 
             List<com.github.javaparser.ast.body.Parameter> params = method.getParameters();
             for (int i = 0; i < params.size(); i++) {
-                sb.append(typeToString(params.get(i).getType())).append(" arg").append(i);
+                sb.append(typeToString(params.get(i)
+                                             .getType()))
+                  .append(" arg")
+                  .append(i);
                 if (i < params.size() - 1) sb.append(", ");
             }
             sb.append(") {\n");
 
-            sb.append("        ");
-            if (!method.getType().toString().equals("void")) {
+            sb.append("        "); if (!method.getType()
+                                              .toString()
+                                              .equals("void")) {
                 sb.append("return ");
-            }
-            sb.append("delegate.").append(method.getName()).append("(");
+            } sb.append("delegate.")
+                .append(method.getName())
+                .append("(");
             for (int i = 0; i < params.size(); i++) {
-                sb.append("arg").append(i);
+                sb.append("arg")
+                  .append(i);
                 if (i < params.size() - 1) sb.append(", ");
             }
             sb.append(");\n");
@@ -249,14 +277,14 @@ public class DubboGeneratorMojo extends AbstractMojo {
     // 新增方法：提取包名
     private String extractPackageName(String fullyQualifiedName) {
         int lastDotIndex = fullyQualifiedName.lastIndexOf('.');
-        return (lastDotIndex >= 0)
-                ? fullyQualifiedName.substring(0, lastDotIndex)
-                : "";
+        return (lastDotIndex >= 0) ? fullyQualifiedName.substring(0, lastDotIndex) : "";
     }
 
     private void writeFile(String basePath, String pkg, String className, String content) throws IOException {
-        String dirPath = basePath + "/" + pkg.replace('.', '/');
-        new File(dirPath).mkdirs();
+        String dirPath = basePath + "/" + pkg.replace('.', '/'); File dir = new File(dirPath);
+        if (!dir.mkdirs() && !dir.exists()) {
+            throw new IOException("无法创建目录: " + dir.getAbsolutePath());
+        }
 
         File file = new File(dirPath, className + ".java");
         try (FileWriter writer = new FileWriter(file)) {
@@ -270,15 +298,8 @@ public class DubboGeneratorMojo extends AbstractMojo {
     }
 
     // 新增 ClassInfo 类来存储类信息
-    private static class ClassInfo {
-        @Getter
-        private final String className;
-        private final CompilationUnit compilationUnit;
-
-        public ClassInfo(String className, CompilationUnit compilationUnit) {
-            this.className = className;
-            this.compilationUnit = compilationUnit;
-        }
+    private record ClassInfo(@Getter String className,
+                             CompilationUnit compilationUnit) {
 
         public List<MethodDeclaration> getMethods() {
             return compilationUnit.findAll(MethodDeclaration.class);

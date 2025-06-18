@@ -21,7 +21,30 @@ import java.util.Date;
 
 
 /**
- * @author lty
+ * AppWebConfig 类用于配置 Spring MVC 的 Web 应用程序。
+ * 该类实现了 WebMvcConfigurer 接口，并提供了多个 Bean 配置方法。
+ * 核心功能包括：
+ * 1. 配置跨域资源共享（CORS）。
+ * 2. 配置内容协商，默认使用 JSON 格式。
+ * 3. 配置 Jackson 序列化和反序列化工具，处理特定类型的序列化和反序列化。
+ * 4. 配置全局类型处理，包括日期和时间的转换。
+ * <p>
+ * 使用示例：
+ * 在 Spring Boot 应用程序中，将此配置类添加到配置类列表中，以便应用这些配置。
+ *
+ * @Configuration public class AppConfig {
+ * @Bean public AppWebConfig appWebConfig() {
+ * return new AppWebConfig();
+ * }
+ * }
+ * <p>
+ * 构造函数参数：
+ * 该类没有构造函数，因此不需要传递任何参数。
+ * <p>
+ * 使用限制或潜在的副作用：
+ * 1. 配置了全局的 CORS 策略，可能会影响所有请求的跨域资源共享。
+ * 2. 配置了默认的 JSON 内容协商策略，可能会影响非 JSON 请求的处理。
+ * 3. 自定义的 Jackson 序列化和反序列化器可能会影响特定类型的 JSON 转换。
  */
 @Configuration
 public class AppWebConfig implements WebMvcConfigurer {
@@ -126,8 +149,7 @@ public class AppWebConfig implements WebMvcConfigurer {
                                          })
                                          .deserializerByType(Instant.class, new JsonDeserializer<Instant>() {
                                              @Override
-                                             public Instant deserialize(JsonParser p,
-                                                                        DeserializationContext ctxt) throws IOException {
+                                             public Instant deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
                                                  String value = p.getText()
                                                                  .trim();
                                                  return Instant.ofEpochMilli(Long.parseLong(value));
@@ -148,28 +170,25 @@ public class AppWebConfig implements WebMvcConfigurer {
                                                              })
                                          .deserializerByType(LocalDate.class, new JsonDeserializer<LocalDate>() {
                                              @Override
-                                             public LocalDate deserialize(JsonParser p,
-                                                                          DeserializationContext ctxt) throws IOException {
+                                             public LocalDate deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
                                                  String value = p.getText()
-                                                                 .trim();
-                                                 return LocalDate.ofInstant(Instant.ofEpochMilli(Long.parseLong(value)),
-                                                                            ZoneOffset.systemDefault());
+                                                                 .trim(); return LocalDate.ofInstant(
+                                                         Instant.ofEpochMilli(Long.parseLong(value)),
+                                                         ZoneOffset.systemDefault());
                                              }
                                          })
                                          .deserializerByType(LocalTime.class, new JsonDeserializer<LocalTime>() {
                                              @Override
-                                             public LocalTime deserialize(JsonParser p,
-                                                                          DeserializationContext ctxt) throws IOException {
+                                             public LocalTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
                                                  String value = p.getText()
-                                                                 .trim();
-                                                 return LocalTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(value)),
-                                                                            ZoneOffset.systemDefault());
+                                                                 .trim(); return LocalTime.ofInstant(
+                                                         Instant.ofEpochMilli(Long.parseLong(value)),
+                                                         ZoneOffset.systemDefault());
                                              }
                                          })
                                          .deserializerByType(Ciphertext.class, new JsonDeserializer<Ciphertext>() {
                                              @Override
-                                             public Ciphertext deserialize(JsonParser p,
-                                                                           DeserializationContext ctxt) throws IOException {
+                                             public Ciphertext deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
                                                  return new Ciphertext(p.getText()
                                                                         .trim());
                                              }

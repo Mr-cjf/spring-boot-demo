@@ -13,8 +13,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>monomer</module>
         <module>child</module>
+        <module>monomer</module>
     </modules>
 
     <dependencyManagement>

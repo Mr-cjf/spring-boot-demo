@@ -84,7 +84,7 @@ public class AppRedisConfig {
             // 初始化缓存名称
             builder.initialCacheNames(new LinkedHashSet<>(cacheNames));
         }
-        // The statistics collector supports capturing of relevant RedisCache operations such as hits & misses.
+        // 统计信息收集器支持捕获相关的RedisCache作，例如命中和未命中。
         if (cacheProperties.getRedis().isEnableStatistics()) {
             // 启用缓存统计
             builder.enableStatistics();
