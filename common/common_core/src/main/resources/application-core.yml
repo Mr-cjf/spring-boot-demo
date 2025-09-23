@@ -1,51 +1,38 @@
 # tomcat default config
 server:
   tomcat:
-    max-connections: 8192
-    accept-count: 100
+    max-connections: 8192 # 最大连接数
+    accept-count: 100 # 接受连接数
     threads:
-      max: 200
-      min-spare: 10
+      max: 200 # 最大线程数
+      min-spare: 10 # 最小空闲线程数
 # spring config
 spring:
   servlet:
     multipart:
-      max-file-size: 4MB
-      max-request-size: 20MB
+      max-file-size: 4MB # 最大文件大小
+      max-request-size: 20MB # 最大请求大小
   autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration # 排除自动配置
   web:
     resources:
-      add-mappings: false
+      add-mappings: false # 是否添加映射
   jackson:
-    default-property-inclusion: non_null
-    property-naming-strategy: LOWER_CAMEL_CASE
+    default-property-inclusion: non_null # 默认属性包含
+    property-naming-strategy: LOWER_CAMEL_CASE # 属性命名策略
     serialization:
-      fail-on-empty-beans: false
-      write-date-keys-as-timestamps: true
-      write-date-timestamps-as-nanoseconds: false
-      write-dates-as-timestamps: true
+      fail-on-empty-beans: false # 空bean序列化失败
+      write-date-keys-as-timestamps: true # 将日期键作为时间戳写入
+      write-date-timestamps-as-nanoseconds: false # 将日期时间戳作为纳秒写入
+      write-dates-as-timestamps: true # 将日期作为时间戳写入
     deserialization:
-      fail-on-unknown-properties: false
-      fail-on-numbers-for-enums: true
-      read-date-timestamps-as-nanoseconds: false
-  cache:
-    redis:
-      cache-null-values: true
-      key-prefix: "${spring.application.name}:"
-      time-to-live: 3d
-  data:
-    redis:
-      timeout: 5000ms
-      lettuce:
-        pool:
-          max-active: 8
-          max-idle: 4
-          min-idle: 1
-          max-wait: 2000ms
-      host: dummy-host
-      port: 0
+      fail-on-unknown-properties: false # 反序列化时遇到未知属性失败
+      fail-on-numbers-for-enums: true # 枚举类型遇到数字失败
+      read-date-timestamps-as-nanoseconds: false # 读取日期时间戳作为纳秒
 dubbo:
   protocol:
-    name: dubbo
-    serialization: json2
+    name: dubbo # 协议名称
+  application:
+    auto-trust-serialize-class: true
+    trust-serialize-class-level: 2
+

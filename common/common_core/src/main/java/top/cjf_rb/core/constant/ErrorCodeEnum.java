@@ -95,6 +95,7 @@ public enum ErrorCodeEnum {
      */
     private final String msg;
 
+
     public String getCode() {
         return name();
     }

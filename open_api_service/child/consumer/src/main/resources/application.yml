@@ -30,7 +30,7 @@ dubbo:
     qos-enable: false
   consumer:
     timeout: 3000
-    retries: 2
+    retries: 0 # 禁用重试
     check: false
   # Dubbo 注册中心配置
   registry:

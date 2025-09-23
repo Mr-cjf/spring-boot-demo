@@ -20,11 +20,13 @@ public class AppGlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public Object handleException(Exception ex) {
-        AppException appException; if (Objects.requireNonNull(ex) instanceof AppException appException1) {
+        log.error("全局未处理异常处理器捕获到异常：", ex);
+        AppException appException;
+        if (Objects.requireNonNull(ex) instanceof AppException appException1) {
             appException = appException1;
         } else {
-            appException = new AppException(ErrorCodeEnum.UNKNOWN_ERROR, ex.getMessage(), ex); log.error(
-                    "全局未处理异常处理器捕获到异常：", appException);
+            appException = new AppException(ErrorCodeEnum.UNKNOWN_ERROR, ex.getMessage());
+
         }
         return ErrorVo.of(appException.getErrorCodeEnum()
                                       .getCode(), appException.getErrorCodeEnum()

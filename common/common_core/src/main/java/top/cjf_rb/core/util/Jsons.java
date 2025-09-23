@@ -11,6 +11,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.SneakyThrows;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -94,6 +95,13 @@ public final class Jsons implements ApplicationContextAware {
         return defaultJsonOps.stringify(object);
     }
 
+
+    /**
+     * 对象转换为json
+     */
+    public static String beanToJson(@NonNull Object obj) {
+        return defaultJsonOps.beanToJson(obj);
+    }
     /**
      * 获取时间格式的Json操作
      */
@@ -242,6 +250,14 @@ public final class Jsons implements ApplicationContextAware {
             } catch (JsonProcessingException e) {
                 throw new AppException(ErrorCodeEnum.DATA_ERRORS, "Json序列化异常", e);
             }
+        }
+
+        /**
+         * 对象转换为json
+         */
+        @SneakyThrows
+        public String beanToJson(Object obj) {
+            return objectMapper.writeValueAsString(obj);
         }
     }
 }

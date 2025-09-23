@@ -70,7 +70,7 @@ dubbo:
   consumer:
     check: false
   provider:
-    filter: AppDubboGlobalProviderExceptionFilter,-exception
+    filter: -exception
   # Dubbo 协议及端口配置
   protocol:
     name: dubbo  # 使用 Dubbo 协议

@@ -2,17 +2,16 @@
 spring:
   cache:
     redis:
-      cache-null-values: true
-      key-prefix: "${spring.application.name}:"
-      time-to-live: 3d
+      cache-null-values: true # 缓存空值
+      key-prefix: "${spring.application.name}:" # 键前缀
+      time-to-live: 3d # 缓存过期时间
   data:
     redis:
-      timeout: 5000ms
+      timeout: 5000ms # 超时时间
       lettuce:
         pool:
-          max-active: 8
-          max-idle: 4
-          min-idle: 1
-          max-wait: 2000ms
-      host: dummy-host
-      port: 0
+          max-active: 8 # 最大活动连接数
+          max-idle: 4 # 最大空闲连接数
+          min-idle: 1 # 最小空闲连接数
+          max-wait: 2000ms # 最大等待时间
+      host: dummy-host # 主机

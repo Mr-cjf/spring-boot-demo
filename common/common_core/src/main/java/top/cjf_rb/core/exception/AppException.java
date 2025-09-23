@@ -5,11 +5,13 @@ import lombok.Getter;
 import top.cjf_rb.core.constant.ErrorCodeEnum;
 import top.cjf_rb.core.constant.SeparatorEnum;
 
+import java.io.Serializable;
+
 /**
  * 业务异常
  */
 @Getter
-public class AppException extends RuntimeException {
+public class AppException extends RuntimeException implements Serializable {
 
     private static final String DELIMITER = SeparatorEnum.SPACE.getSeparator();
 
@@ -18,6 +20,13 @@ public class AppException extends RuntimeException {
     private Object data;
 
     private String description;
+
+    public AppException() {
+        super(ErrorCodeEnum.UNKNOWN_ERROR.getMsg());
+        this.errorCodeEnum = ErrorCodeEnum.UNKNOWN_ERROR;
+        this.data = null;
+        this.description = null;
+    }
 
     /**
      * 构造函数，传入错误码
