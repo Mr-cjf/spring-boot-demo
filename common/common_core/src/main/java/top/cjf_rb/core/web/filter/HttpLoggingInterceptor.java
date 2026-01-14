@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 /**
  记录原请求的数据
 
- @author lty
+ @author cjf
  @since 1.0 */
 @Slf4j
 public class HttpLoggingInterceptor implements ClientHttpRequestInterceptor {

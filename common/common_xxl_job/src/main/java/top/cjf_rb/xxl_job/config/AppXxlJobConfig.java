@@ -23,7 +23,7 @@ import java.util.List;
 /**
  xxl-job config
 
- @author lty */
+ @author cjf */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor

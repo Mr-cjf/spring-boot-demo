@@ -8,7 +8,7 @@ import java.util.List;
 /**
  xxl job分页模型
 
- @author lty
+ @author cjf
  @since 1.0 */
 @Data
 @Accessors(chain = true)

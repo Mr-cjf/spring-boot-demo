@@ -9,7 +9,7 @@ import java.time.Duration;
 /**
  xxl-job 配置文件
 
- @author lty
+ @author cjf
  @since 1.0 */
 @Data
 @ConfigurationProperties(prefix = "xxl.job")

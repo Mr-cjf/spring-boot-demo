@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 /**
  常用且固定时间的Cron表达式格式化
 
- @author lty
+ @author cjf
  @since 1.0 */
 public final class CronFormats {
 

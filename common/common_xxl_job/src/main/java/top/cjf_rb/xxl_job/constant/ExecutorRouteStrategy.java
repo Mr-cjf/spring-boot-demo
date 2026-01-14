@@ -3,7 +3,7 @@ package top.cjf_rb.xxl_job.constant;
 /**
  执行器路由策略
 
- @author lty
+ @author cjf
  @since 1.0 */
 public final class ExecutorRouteStrategy {
 

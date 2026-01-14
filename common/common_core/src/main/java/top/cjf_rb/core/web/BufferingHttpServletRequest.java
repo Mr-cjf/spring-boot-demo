@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  缓冲request body, 使之可以多次读取body内容
 
- @author lty
+ @author cjf
  @since 1.0 */
 public class BufferingHttpServletRequest extends HttpServletRequestWrapper {
 

@@ -3,7 +3,7 @@ package top.cjf_rb.xxl_job.constant;
 /**
  调度类型
 
- @author lty
+ @author cjf
  @since 1.0 */
 public final class ScheduleType {
 

@@ -16,7 +16,7 @@ import java.io.Serializable;
 /**
  xxl job
 
- @author lty */
+ @author cjf */
 @Data
 @Accessors(chain = true)
 public class JobDetail implements Serializable {

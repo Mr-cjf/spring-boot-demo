@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import top.cjf_rb.xxl_job.client.XxlJobClient;
 
 /**
- @author lty */
+ @author cjf */
 @Order(1)
 @Component
 public class XxlJobInitializationRunner implements ApplicationRunner {
