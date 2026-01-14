@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.Duration;
 
 /**
- * @author lty
+ * @author cjf
  * @since 1.0
  */
 @Data

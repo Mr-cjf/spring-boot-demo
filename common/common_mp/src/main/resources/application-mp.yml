@@ -1,0 +1,22 @@
+# mybatis plus config
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: cn.huahanedu.**.pojo
+  global-config:
+    db-config:
+      id-type: assign_id
+      insert-strategy: not_null
+      update-strategy: not_null
+      logic-delete-field: deleted
+      logic-delete-value: 'now()'
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-unknown-column-behavior: warning
+    cache-enabled: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+app:
+  tenant:
+    enabled: false

@@ -3,7 +3,7 @@ package top.cjf_rb.gateway.constants;
 /**
  * 应用自定义的一些请求头
  *
- * @author lty
+ * @author cjf
  * @since 1.0
  */
 public final class AppHeaderConst {

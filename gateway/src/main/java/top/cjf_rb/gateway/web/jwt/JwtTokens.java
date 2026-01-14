@@ -13,7 +13,7 @@ import javax.crypto.SecretKey;
 /**
  * JWT 操作类
  *
- * @author lty
+ * @author cjf
  * @since 1.0
  */
 @Setter

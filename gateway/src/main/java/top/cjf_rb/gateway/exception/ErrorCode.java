@@ -3,7 +3,7 @@ package top.cjf_rb.gateway.exception;
 /**
  * 业务错误码枚举需要实现的接口
  *
- * @author lty
+ * @author cjf
  * @since 1.0
  */
 public interface ErrorCode {

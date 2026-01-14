@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * 唯一标识符生成
  *
- * @author lty
+ * @author cjf
  * @since 1.0
  */
 public class Identifiers {

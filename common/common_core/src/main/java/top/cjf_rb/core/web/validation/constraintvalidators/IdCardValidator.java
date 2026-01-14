@@ -8,7 +8,7 @@ import top.cjf_rb.core.web.validation.constraints.IdCard;
 /**
  * 身份证号格式校验器
  *
- * @author lty
+ * @author cjf
  */
 public class IdCardValidator implements ConstraintValidator<IdCard, String> {
 

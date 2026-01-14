@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * 认证的用户信息
  *
- * @author lty
+ * @author cjf
  * @since 1.0
  */
 @Data

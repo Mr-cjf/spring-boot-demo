@@ -10,8 +10,8 @@ import java.io.Serializable;
 
 /**
  * 接口错误时统一的响应体
- * 
- * @author lty
+ *
+ * @author cjf
  */
 @Data
 @Accessors(chain = true)

@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * 加密字符串
  *
- * @author lty
+ * @author cjf
  * @since 1.0
  */
 @Getter
