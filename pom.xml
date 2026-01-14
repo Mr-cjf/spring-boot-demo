@@ -23,7 +23,8 @@
         <jackson.version>2.19.0</jackson.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven.compiler.plugin>3.14.0</maven.compiler.plugin>
+        <maven.compiler.plugin>3.14.1</maven.compiler.plugin>
+        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -64,7 +65,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- 测试期间处理 javax/xml/bind/DatatypeConverter -->
+            <!-- 流量监控组件 -->
             <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
@@ -118,6 +119,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>3.9.0</version>
                 </plugin>
@@ -133,5 +139,68 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!-- 跳过 test 阶段 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <!-- 统一配置 maven-source-plugin 让所有子模块继承 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin}</version>
+                <configuration>
+                    <useIncrementalCompilation>true</useIncrementalCompilation>
+
+                    <!-- 优化编译参数 -->
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <release>${java.version}</release> <!-- 统一使用 release，确保跨平台一致性 -->
+                    <encoding>${project.build.sourceEncoding}</encoding>
+
+                    <!-- 优化编译器参数 -->
+                    <compilerArgs>
+                        <arg>-parameters</arg> <!-- 保留参数名（Spring等框架需要） -->
+                        <arg>-Xlint:unchecked</arg> <!-- 显示未检查的警告 -->
+                        <!-- 隐藏你在日志中看到的那个关于"注解处理"的提示 -->
+                        <arg>-Xlint:-options</arg>
+                    </compilerArgs>
+
+                    <!-- 优化注解处理 (针对 Lombok) -->
+                    <annotationProcessorPaths>
+                        <!-- 显式声明 Lombok 路径，防止 Maven 在类路径中盲目搜索 -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <!-- 使用 spring-boot-dependencies 定义的版本 -->
+                            <!-- 红色警告可以不用管 -->
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
