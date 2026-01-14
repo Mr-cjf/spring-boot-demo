@@ -29,7 +29,7 @@ public abstract class LogicalDeleteEntity<ID extends Serializable> extends Basic
      逻辑删除字段
      */
     @JsonIgnore
-    @TableLogic
+    @TableLogic(value = "0", delval = "(UNIX_TIMESTAMP(NOW()) * 1000000 + MICROSECOND(NOW()))")
     @TableField(value = "is_deleted", select = false, fill = FieldFill.INSERT)
     private Boolean deleted;
 
