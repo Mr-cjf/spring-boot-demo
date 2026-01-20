@@ -1,7 +1,5 @@
-package cn.huahanedu.frame.captcha.supplier;
+package top.cjf_rb.frame.captcha.supplier;
 
-import cn.huahanedu.frame.captcha.pojo.vo.ImageCaptchaVo;
-import com.wf.captcha.ArithmeticCaptcha;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -9,6 +7,7 @@ import top.cjf_rb.core.constant.ErrorCodeEnum;
 import top.cjf_rb.core.exception.AppException;
 import top.cjf_rb.core.util.Identifiers;
 import top.cjf_rb.core.util.Nones;
+import top.cjf_rb.frame.captcha.pojo.vo.ImageCaptchaVo;
 import top.cjf_rb.redis.context.type.accessor.PrefixCacheAccessor;
 
 import java.io.ByteArrayOutputStream;
@@ -16,39 +15,40 @@ import java.util.Base64;
 import java.util.Optional;
 
 /**
- 算术图片验证码
+ 字母数字图片验证码
 
  @author cjf
  @since 1.0 */
 @Slf4j
 @Component
-public class ArithmeticImageCaptchaProvider implements ImageCaptchaProvider<ImageCaptchaVo> {
+public class AlphanumericImageCaptchaProvider implements ImageCaptchaProvider<ImageCaptchaVo> {
 
     @Resource
     public PrefixCacheAccessor<String> imageCaptchaAccessor;
-    @Resource
-    private ArithmeticCaptcha arithmeticProducer;
+
+    @Resource(name = "alphanumericProducer")
+    private com.wf.captcha.SpecCaptcha alphanumericProducer;
 
     @Override
     public boolean supports(Type type) {
-        return Type.ARITHMETIC.equals(type);
+        return Type.ALPHANUMERIC.equals(type);
     }
 
     @Override
     public ImageCaptchaVo create() {
         // 生成文字验证码
-        String text = arithmeticProducer.text();
+        String code = alphanumericProducer.text(); // 使用text()方法获取验证码文本
 
         // 图片流转Base64字符串方式
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        boolean success = arithmeticProducer.out(os); // 将验证码图片写入输出流
+        boolean success = alphanumericProducer.out(os); // 将验证码图片写入输出流
         if (!success) {
-            throw new AppException(ErrorCodeEnum.UNKNOWN_ERROR, "算术图片验证码生成失败!");
+            throw new AppException(ErrorCodeEnum.UNKNOWN_ERROR, "字母数字图片验证码生成失败!");
         }
 
         // 缓存验证码
         String imageKey = Identifiers.nanoId();
-        imageCaptchaAccessor.set(imageKey, text);
+        imageCaptchaAccessor.set(imageKey, code);
         return new ImageCaptchaVo().setKey(imageKey)
                                    .setImage(Base64.getEncoder()
                                                    .encodeToString(os.toByteArray()));
@@ -66,7 +66,7 @@ public class ArithmeticImageCaptchaProvider implements ImageCaptchaProvider<Imag
         }
 
         if (optional.get()
-                    .equals(captcha)) {
+                    .equalsIgnoreCase(captcha)) {
             imageCaptchaAccessor.clear(key);
             return true;
         }

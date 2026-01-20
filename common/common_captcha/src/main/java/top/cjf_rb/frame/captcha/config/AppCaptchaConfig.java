@@ -1,11 +1,11 @@
-package cn.huahanedu.frame.captcha.config;
+package top.cjf_rb.frame.captcha.config;
 
-import cn.huahanedu.frame.captcha.pojo.prop.AppCaptchaProperties;
 import com.wf.captcha.ArithmeticCaptcha;
 import com.wf.captcha.SpecCaptcha;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import top.cjf_rb.frame.captcha.pojo.prop.AppCaptchaProperties;
 import top.cjf_rb.redis.context.type.accessor.PrefixCacheAccessor;
 import top.cjf_rb.redis.context.type.accessor.RedisPrefixAccessor;
 

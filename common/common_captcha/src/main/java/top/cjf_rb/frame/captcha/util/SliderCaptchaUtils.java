@@ -1,8 +1,8 @@
-package cn.huahanedu.frame.captcha.util;
+package top.cjf_rb.frame.captcha.util;
 
-import cn.huahanedu.frame.captcha.pojo.vo.SliderCaptchaVo;
 import lombok.extern.slf4j.Slf4j;
 import top.cjf_rb.core.util.Identifiers;
+import top.cjf_rb.frame.captcha.pojo.vo.SliderCaptchaVo;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;

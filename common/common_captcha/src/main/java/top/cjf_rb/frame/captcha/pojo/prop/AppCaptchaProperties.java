@@ -1,4 +1,4 @@
-package cn.huahanedu.frame.captcha.pojo.prop;
+package top.cjf_rb.frame.captcha.pojo.prop;
 
 import lombok.Data;
 import lombok.Getter;

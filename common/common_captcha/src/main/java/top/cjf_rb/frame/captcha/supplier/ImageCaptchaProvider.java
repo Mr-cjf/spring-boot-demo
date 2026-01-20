@@ -1,6 +1,6 @@
-package cn.huahanedu.frame.captcha.supplier;
+package top.cjf_rb.frame.captcha.supplier;
 
-import cn.huahanedu.frame.captcha.pojo.vo.ImageCaptchaVo;
+import top.cjf_rb.frame.captcha.pojo.vo.ImageCaptchaVo;
 
 /**
  @author cjf

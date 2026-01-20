@@ -187,18 +187,6 @@
                         <!-- 隐藏你在日志中看到的那个关于"注解处理"的提示 -->
                         <arg>-Xlint:-options</arg>
                     </compilerArgs>
-
-                    <!-- 优化注解处理 (针对 Lombok) -->
-                    <annotationProcessorPaths>
-                        <!-- 显式声明 Lombok 路径，防止 Maven 在类路径中盲目搜索 -->
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <!-- 使用 spring-boot-dependencies 定义的版本 -->
-                            <!-- 红色警告可以不用管 -->
-                            <version>${lombok.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>

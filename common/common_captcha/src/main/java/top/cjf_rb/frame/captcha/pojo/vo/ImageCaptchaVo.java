@@ -1,4 +1,4 @@
-package cn.huahanedu.frame.captcha.pojo.vo;
+package top.cjf_rb.frame.captcha.pojo.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

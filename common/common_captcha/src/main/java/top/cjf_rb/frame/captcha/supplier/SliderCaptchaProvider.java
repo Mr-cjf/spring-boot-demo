@@ -1,13 +1,13 @@
-package cn.huahanedu.frame.captcha.supplier;
+package top.cjf_rb.frame.captcha.supplier;
 
-import cn.huahanedu.frame.captcha.pojo.vo.SliderCaptchaVo;
-import cn.huahanedu.frame.captcha.util.SliderCaptchaUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import top.cjf_rb.core.constant.ErrorCodeEnum;
 import top.cjf_rb.core.exception.AppException;
 import top.cjf_rb.core.util.Nones;
+import top.cjf_rb.frame.captcha.pojo.vo.SliderCaptchaVo;
+import top.cjf_rb.frame.captcha.util.SliderCaptchaUtils;
 import top.cjf_rb.redis.context.type.accessor.PrefixCacheAccessor;
 
 import java.io.IOException;

@@ -1,14 +1,14 @@
-package cn.huahanedu.frame.captcha.web.controller;
+package top.cjf_rb.frame.captcha.web.controller;
 
-import cn.huahanedu.frame.captcha.pojo.vo.ImageCaptchaVo;
-import cn.huahanedu.frame.captcha.supplier.ImageCaptchaManager;
-import cn.huahanedu.frame.captcha.supplier.ImageCaptchaProvider;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.cjf_rb.frame.captcha.pojo.vo.ImageCaptchaVo;
+import top.cjf_rb.frame.captcha.supplier.ImageCaptchaManager;
+import top.cjf_rb.frame.captcha.supplier.ImageCaptchaProvider;
 
 /**
  验证码控制器

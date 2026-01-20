@@ -1,11 +1,11 @@
-package cn.huahanedu.frame.captcha.supplier;
+package top.cjf_rb.frame.captcha.supplier;
 
-import cn.huahanedu.frame.captcha.pojo.vo.ImageCaptchaVo;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import top.cjf_rb.core.constant.ErrorCodeEnum;
 import top.cjf_rb.core.exception.AppException;
+import top.cjf_rb.frame.captcha.pojo.vo.ImageCaptchaVo;
 
 import java.util.List;
 

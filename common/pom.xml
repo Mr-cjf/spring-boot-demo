@@ -38,11 +38,7 @@
                 <artifactId>redisson-spring-data-32</artifactId>
                 <version>3.52.0</version>
             </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-                <version>3.5.15</version>
-            </dependency>
+
             <!-- 动态数据源 -->
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -58,6 +54,11 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-jsqlparser</artifactId>
+                <version>3.5.15</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>3.5.15</version>
             </dependency>
             <dependency>
@@ -141,6 +142,18 @@
                 <artifactId>netty-codec-http</artifactId>
                 <version>4.2.8.Final</version>
             </dependency>
+            <!-- 密钥生成工具 一个开源的Java密码学扩展库，提供了对国密算法的支持。 -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk15to18</artifactId>
+                <version>1.83</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15to18</artifactId>
+                <version>1.83</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

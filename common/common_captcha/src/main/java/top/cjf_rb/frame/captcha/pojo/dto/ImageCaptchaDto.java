@@ -1,4 +1,4 @@
-package cn.huahanedu.frame.captcha.pojo.dto;
+package top.cjf_rb.frame.captcha.pojo.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
